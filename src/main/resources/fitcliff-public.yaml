@@ -329,7 +329,7 @@ components:
         payments:
           type: array
           items:
-            $ref: '#/components/schemas/CustomerPayment'
+            $ref: '#/components/schemas/IndividualPayment'
         group:
           $ref: '#/components/schemas/Group'
         membershipType:
@@ -346,7 +346,7 @@ components:
         - address
         - membershipAmount
         - membershipDuration
-    CustomerPayment:
+    IndividualPayment:
       type: object
       properties:
         id:
@@ -367,6 +367,35 @@ components:
           enum:
            - Cash
            - UPI
+      required:
+        - cutomerId
+        - amount
+        - paymentType
+    GroupPayment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        amount:
+          type: string
+        pendingAmount:
+          type: string
+        paymentType:
+          type: string
+          enum:
+           - Cash
+           - UPI
+      required:
+        - groupId
+        - amount
+        - paymentType
     Group:
       type: object
       properties:
@@ -378,6 +407,10 @@ components:
         date:
           type: string
           format: date
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupPayment'
     ValidationError:
       description: A response object that reflects the validation errors occured while validating the input
       type: object
