@@ -1,0 +1,283 @@
+openapi: 3.0.2
+info:
+  title: Gym management system.
+  version: 1.0.0
+  description: Internal API of the Gym mangement system.
+servers:
+  - url: 'https://com.fitcliff/api/{version}'
+    description: Productive environment
+    variables:
+      version:
+        default: v1
+  - url: 'https://fitcliff/api/{version}'
+    description: Acceptence environment
+    variables:
+      version:
+        default: v1
+tags:
+  - name: customer
+    description: Customer Management.
+
+paths:
+  '/admin/customer/{id}':
+    get:
+      description: Get customer details for an id
+      tags:
+        - customer
+      operationId: getCustomer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/customer/{id}/deactivate':
+    put:
+      description: Deactivate customer for the given id
+      tags:
+        - customer
+      operationId: deactivateCustomer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/customer/{id}/activate':
+    put:
+      description: Activate Customer for the given id
+      tags:
+        - user
+      operationId: activateCustomer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/customer':
+    get:
+      description: Get Customer list
+      tags:
+        - user
+      operationId: getCustomers
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+    post:
+      description: Create new Customer
+      tags: [ user ]
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      security:
+        - oidc: [ ]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+    put:
+      description: Update Customer
+      tags: [ customer ]
+      operationId: updateCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+          minLength: 0
+          exclusiveMinimum: true
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          minLength: 0
+          exclusiveMinimum: true
+          maxLength: 255
+          example: a.b@gmail.com
+        phones:
+          type: array
+          items:
+            type: string
+        extId:
+          type: string
+          example: some external id
+        isActive:
+          type: boolean
+      required:
+        - userName
+        - email
+        - phones
+    ValidationError:
+      description: A response object that reflects the validation errors occured while validating the input
+      type: object
+      required:
+        - message
+        - details
+      properties:
+        message:
+          description: Overall message
+          type: string
+        details:
+          description: Array with detailed error messages
+          minItems: 1
+          items:
+            type: object
+            required:
+              - location
+              - param
+              - value
+              - msg
+            properties:
+              location:
+                description: 'Location, where the error occured'
+                type: string
+                enum:
+                  - body
+                  - path
+                  - param
+              param:
+                description: 'Field path with information, where the error occured'
+                type: string
+                example: 'fieldName1[3].fieldName2'
+              value:
+                description: 'Caller provided value that caused the validation error, empty string if nothing was provided'
+                type: string
+              msg:
+                description: 'Validation message for the field, giving the exact reason'
+                type: string
+  responses:
+    Created:
+      description: Stored new data for that reference period (i. e. nothing existed before)
+    Unauthorized:
+      description: Unauthorized (invalid credentials or deactivated user)
+    ValidationError:
+      description: Validation errors occured
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    InvalidMediaType:
+      description: Invalid media type
+    NotFound:
+      description: Data not existing for given period
+    ServerError:
+      description: Server Error
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      description: Api key provided to the member states by the SDG management
+      openIdConnectUrl: 'https://nsc.sdg.bund.de/auth'
+security:
+  - oidc: [ ]
