@@ -17,7 +17,6 @@ servers:
 tags:
   - name: customer
     description: Customer Management.
-
 paths:
   '/admin/customer/{id}':
     get:
@@ -243,6 +242,10 @@ components:
            - Three Months
            - Six Months
            - One Year
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerPayment'
       required:
         - firstName
         - gender
@@ -252,6 +255,27 @@ components:
         - address
         - membershipAmount
         - membershipDuration
+    CustomerPayment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        cutomerId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        amount:
+          type: string
+        pendingAmount:
+          type: string
+        paymentType:
+          type: string
+          enum:
+           - Cash
+           - UPI
     ValidationError:
       description: A response object that reflects the validation errors occured while validating the input
       type: object
