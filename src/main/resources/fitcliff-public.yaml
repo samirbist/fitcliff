@@ -17,7 +17,39 @@ servers:
 tags:
   - name: customer
     description: Customer Management.
+  - name: group
+    description: Group of customer
 paths:
+  '/admin/customer/search':
+    post:
+      description: Search Customers
+      tags: [ customer ]
+      operationId: searchCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
   '/admin/customer/{id}':
     get:
       description: Get customer details for an id
@@ -131,7 +163,7 @@ paths:
           $ref: '#/components/responses/ServerError'
     post:
       description: Create new Customer
-      tags: [ user ]
+      tags: [ customer ]
       operationId: createCustomer
       requestBody:
         content:
@@ -246,6 +278,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomerPayment'
+        group:
+          $ref: '#/components/schemas/Group'
+        membershipType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - GROUP
       required:
         - firstName
         - gender
@@ -276,6 +315,17 @@ components:
           enum:
            - Cash
            - UPI
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        date:
+          type: string
+          format: date
     ValidationError:
       description: A response object that reflects the validation errors occured while validating the input
       type: object
