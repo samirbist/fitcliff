@@ -210,15 +210,48 @@ components:
           type: array
           items:
             type: string
-        extId:
+        photoMongoId:
           type: string
-          example: some external id
+          example: mongodb id
+        docMongoId:
+          type: string
+          example: mongodb id
+        gender:
+         type: string
+         enum:
+          - Male
+          - Female
         isActive:
           type: boolean
+        regDate:
+          type: string
+          format: date
+        joinDate:
+          type: string
+          format: date
+        birthdate:
+          type: string
+          format: date
+        address:
+          type: string
+        membershipAmount:
+          type: string
+        membershipDuration:
+          type: string
+          enum:
+           - One Month
+           - Three Months
+           - Six Months
+           - One Year
       required:
-        - userName
-        - email
+        - firstName
+        - gender
         - phones
+        - joinDate
+        - birthdate
+        - address
+        - membershipAmount
+        - membershipDuration
     ValidationError:
       description: A response object that reflects the validation errors occured while validating the input
       type: object
