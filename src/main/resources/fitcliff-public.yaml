@@ -19,7 +19,179 @@ tags:
     description: Customer Management.
   - name: group
     description: Group of customer
+  - name: image
+    description: image.
+  - name: documentId
+    description: documentId.
 paths:
+  '/admin/documentId':
+    post:
+      description: Create document entry
+      tags: [ documentId ]
+      operationId: createDocumentId
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      security:
+        - oidc: [ ]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentImage'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/documentId/{id}':
+    get:
+      description: Download document Id
+      tags:
+        - documentId
+      operationId: getDocumentId
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+    delete:
+      description: Delete document Id
+      tags:
+        - image
+      operationId: deleteDocumentId
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/image':
+    post:
+      description: Create Image entry
+      tags: [ image ]
+      operationId: createImage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      security:
+        - oidc: [ ]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/image/{id}':
+    get:
+      description: Download image
+      tags:
+        - image
+      operationId: getImage
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+    delete:
+      description: Delete image
+      tags:
+        - image
+      operationId: deleteImage
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
   '/admin/group':
     get:
       description: Get Group list
@@ -269,6 +441,50 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
+    DocumentImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+        cutomerId:
+          type: integer
+          format: int64
+        createdOn:
+          type: string
+          format: date
+        mongoId:
+          type: string
+          example: mongodb id
+      required:
+        - fileName
+        - createdBy
+        - createdOn
+        - mongoId
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+        cutomerId:
+          type: integer
+          format: int64
+        createdOn:
+          type: string
+          format: date
+        mongoId:
+          type: string
+          example: mongodb id
+      required:
+        - fileName
+        - createdBy
+        - createdOn
+        - mongoId
     Customer:
       type: object
       properties:
@@ -332,6 +548,10 @@ components:
             $ref: '#/components/schemas/IndividualPayment'
         group:
           $ref: '#/components/schemas/Group'
+        image:
+          $ref: '#/components/schemas/Image'
+        documentImage:
+          $ref: '#/components/schemas/DocumentImage'
         membershipType:
           type: string
           enum:
@@ -469,7 +689,7 @@ components:
   securitySchemes:
     oidc:
       type: openIdConnect
-      description: Api key provided to the member states by the SDG management
-      openIdConnectUrl: 'https://nsc.sdg.bund.de/auth'
+      description: Api key provided to the member states by the filtcliff managment
+      openIdConnectUrl: 'https://gym.fitcliff/auth'
 security:
   - oidc: [ ]

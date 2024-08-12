@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "group_payment")
 public class GroupPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

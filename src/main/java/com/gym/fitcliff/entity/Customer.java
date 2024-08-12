@@ -4,14 +4,19 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "customer")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", updatable = false, nullable = false)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -23,12 +28,13 @@ public class Customer {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "customer_phones", joinColumns = @JoinColumn(name = "customer_id"))
-    @Column(name = "phone")
-    private List<String> phones;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Phone> phones;
 
+    @Column
     private String photoMongoId;
+    
+    @Column
     private String docMongoId;
 
     @Enumerated(EnumType.STRING)
@@ -69,6 +75,14 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MembershipType membershipType;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "document_id", referencedColumnName = "id")
+    private DocumentImage documentImage;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
 
     // Enum definitions
     public enum Gender {
@@ -82,6 +96,17 @@ public class Customer {
     public enum MembershipType {
         INDIVIDUAL, GROUP
     }
+    
+    
+    public void addPhone(final Phone phone) {
+        phones.add(phone);
+        phone.setCustomer(this);
+      }
+    
+    public void addIndividualPayment(final IndividualPayment individualPayment) {
+    	payments.add(individualPayment);
+    	individualPayment.setCustomer(this);
+      }
 
    
 }
