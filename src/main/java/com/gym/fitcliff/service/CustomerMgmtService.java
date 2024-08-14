@@ -12,5 +12,7 @@ public interface CustomerMgmtService {
 
 	List<Customer> getCustomers();
 
+	Customer updateCustomer(Customer customer);
+
 
 }
