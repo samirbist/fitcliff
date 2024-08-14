@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "phone")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Phone {
+public class PhoneDao {
 
   /** Primary key */
   @Id
@@ -32,5 +32,5 @@ public class Phone {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CUSTOMER_FK", nullable = false)
-  private Customer customer;
+  private CustomerDao customer;
 }

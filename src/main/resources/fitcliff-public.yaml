@@ -304,62 +304,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/ServerError'
-  '/admin/customer/{id}/deactivate':
-    put:
-      description: Deactivate customer for the given id
-      tags:
-        - customer
-      operationId: deactivateCustomer
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Customer'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
-  '/admin/customer/{id}/activate':
-    put:
-      description: Activate Customer for the given id
-      tags:
-        - user
-      operationId: activateCustomer
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Customer'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
   '/admin/customer':
     get:
       description: Get Customer list
@@ -518,8 +462,8 @@ components:
         gender:
          type: string
          enum:
-          - Male
-          - Female
+          - MALE
+          - FEMALE
         isActive:
           type: boolean
         regDate:
@@ -538,10 +482,10 @@ components:
         membershipDuration:
           type: string
           enum:
-           - One Month
-           - Three Months
-           - Six Months
-           - One Year
+           - ONE_MONTH
+           - THREE_MONTHS
+           - SIX_MONTHS
+           - ONE_YEAR
         payments:
           type: array
           items:

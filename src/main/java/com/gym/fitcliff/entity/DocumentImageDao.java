@@ -16,9 +16,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "image")
+@Table(name = "document")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Image {
+public class DocumentImageDao {
 
 	/** Primary key */
 	@Id
@@ -27,9 +27,9 @@ public class Image {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@OneToOne(mappedBy = "image")
-	private Customer customer;
-	
+	@OneToOne(mappedBy = "documentImage")
+	private CustomerDao customer;
+
     private String fileName;
     private LocalDate createdOn;
     private String mongoId;

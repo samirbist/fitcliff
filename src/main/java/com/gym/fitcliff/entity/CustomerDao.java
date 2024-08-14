@@ -1,18 +1,21 @@
 package com.gym.fitcliff.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Getter
 @Setter
 @Entity
 @Table(name = "customer")
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Customer {
+public class CustomerDao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false)
@@ -29,7 +32,7 @@ public class Customer {
     private String email;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Phone> phones;
+    private List<PhoneDao> phones;
 
     @Column
     private String photoMongoId;
@@ -43,17 +46,15 @@ public class Customer {
 
     @Column(nullable = false)
     private boolean isActive;
-
-    @Temporal(TemporalType.DATE)
-    private Date regDate;
-
-    @Temporal(TemporalType.DATE)
+    
     @Column(nullable = false)
-    private Date joinDate;
+    private LocalDate  regDate;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date birthdate;
+    private LocalDate  joinDate;
+
+    @Column(nullable = false)
+    private LocalDate  birthdate;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String address;
@@ -66,11 +67,11 @@ public class Customer {
     private MembershipDuration membershipDuration;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<IndividualPayment> payments;
+    private List<IndividualPaymentDao> payments;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
-    private Group group;
+    private GroupDao group;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -78,11 +79,11 @@ public class Customer {
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "document_id", referencedColumnName = "id")
-    private DocumentImage documentImage;
+    private DocumentImageDao documentImage;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image image;
+    private ImageDao image;
 
     // Enum definitions
     public enum Gender {
@@ -98,12 +99,12 @@ public class Customer {
     }
     
     
-    public void addPhone(final Phone phone) {
+    public void addPhone(final PhoneDao phone) {
         phones.add(phone);
         phone.setCustomer(this);
       }
     
-    public void addIndividualPayment(final IndividualPayment individualPayment) {
+    public void addIndividualPayment(final IndividualPaymentDao individualPayment) {
     	payments.add(individualPayment);
     	individualPayment.setCustomer(this);
       }

@@ -1,6 +1,8 @@
 package com.gym.fitcliff.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,18 +10,17 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "group_payment")
-public class GroupPayment {
+public class GroupPaymentDao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    private GroupDao group;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private String amount;

@@ -1,6 +1,8 @@
 package com.gym.fitcliff.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.EqualsAndHashCode;
@@ -12,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "ind_customer_payment")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class IndividualPayment {
+public class IndividualPaymentDao {
 	/** Primary key */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +24,10 @@ public class IndividualPayment {
 
 	@ManyToOne
 	@JoinColumn(name = "customer_id", nullable = false)
-	private Customer customer;
+	private CustomerDao customer;
 
-	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
-	private Date date;
+	private LocalDate date;
 
 	@Column(nullable = false)
 	private String amount;
