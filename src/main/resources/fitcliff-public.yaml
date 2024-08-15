@@ -253,7 +253,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: '#/components/schemas/SearchCustomer'
         required: true
       security:
         - oidc: [ ]
@@ -429,6 +429,48 @@ components:
         - createdBy
         - createdOn
         - mongoId
+    SearchCustomer:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+          minLength: 0
+          exclusiveMinimum: true
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          minLength: 0
+          exclusiveMinimum: true
+          maxLength: 255
+          example: a.b@gmail.com
+        gender:
+         type: string
+         enum:
+          - MALE
+          - FEMALE
+        regDate:
+          type: string
+          format: date
+        joinDate:
+          type: string
+          format: date
+        birthdate:
+          type: string
+          format: date
+        address:
+          type: string
+        membershipAmount:
+          type: string
+        membershipDuration:
+          type: string
+          enum:
+           - ONE_MONTH
+           - THREE_MONTHS
+           - SIX_MONTHS
+           - ONE_YEAR
     Customer:
       type: object
       properties:
@@ -504,6 +546,7 @@ components:
       required:
         - firstName
         - gender
+        - email
         - phones
         - joinDate
         - birthdate

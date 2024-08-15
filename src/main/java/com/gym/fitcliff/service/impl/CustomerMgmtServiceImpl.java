@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.gym.fitcliff.entity.CustomerDao;
 import com.gym.fitcliff.exception.CustomerException;
+import com.gym.fitcliff.mapper.CustomerDtoToDaoMapper;
 import com.gym.fitcliff.mapper.CustomerDaoToDtoMapper;
-import com.gym.fitcliff.mapper.CustomerToDaoMapper;
 import com.gym.fitcliff.model.Customer;
+import com.gym.fitcliff.model.SearchCustomer;
 import com.gym.fitcliff.repository.CustomerRepository;
 import com.gym.fitcliff.service.CustomerMgmtService;
 
@@ -24,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 
 	@Autowired
-	private CustomerDaoToDtoMapper customerDaoToDtoMapper;
+	private CustomerDtoToDaoMapper customerDtoToDaoMapper;
 
 	@Autowired
-	private CustomerToDaoMapper customerToDaoMapper;
+	private CustomerDaoToDtoMapper customerDaoToDtoMapper;
 
 	@Autowired
 	private CustomerRepository customerRepository;
@@ -35,12 +36,12 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	@Override
 	public Customer saveCustomer(final Customer customer) {
 		if (IsUniqueEmail(customer)) {
-			final CustomerDao customerDao = customerDaoToDtoMapper.convertCustomerDtoToDao(customer);
+			final CustomerDao customerDao = customerDtoToDaoMapper.convertCustomerDtoToDao(customer);
 			customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
 			customerDao.setActive(true);
 			final CustomerDao savedCustomer = customerRepository.save(customerDao);
 			log.debug("Customer is saved {}", savedCustomer);
-			return customerToDaoMapper.convertCustomerDaoToDto(savedCustomer);
+			return customerDaoToDtoMapper.convertCustomerDaoToDto(savedCustomer);
 		} else {
 			log.error("Error in saving user as username already exists {}", customer.getFirstName());
 			throw new CustomerException("Customer email already exists", customer.getEmail());
@@ -56,7 +57,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	public Customer getCustomer(Long id) {
 		final Optional<CustomerDao> customerOptional = customerRepository.findById(id);
 		if (customerOptional.isPresent()) {
-			Customer customer = customerToDaoMapper.convertCustomerDaoToDto(customerOptional.get());
+			Customer customer = customerDaoToDtoMapper.convertCustomerDaoToDto(customerOptional.get());
 			return customer;
 		}
 		log.error("User not found for id : {}", id);
@@ -68,7 +69,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	public List<Customer> getCustomers() {
 		final List<CustomerDao> customerDaoList = customerRepository.findAll();
 		final List<Customer> customerList = customerDaoList.stream()
-				.map(customerDao -> customerToDaoMapper.convertCustomerDaoToDto(customerDao))
+				.map(customerDao -> customerDaoToDtoMapper.convertCustomerDaoToDto(customerDao))
 				.sorted(Comparator.comparing(Customer::getFirstName)).collect(Collectors.toList());
 
 		return customerList;
@@ -76,7 +77,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 
 	@Override
 	public Customer updateCustomer(Customer customer) {
-		CustomerDao savedCustomerDao = customerDaoToDtoMapper.convertCustomerDtoToDao(customer);
+		CustomerDao savedCustomerDao = customerDtoToDaoMapper.convertCustomerDtoToDao(customer);
 		final Optional<CustomerDao> customerOptional = customerRepository.findById(customer.getId());
 		if (customerOptional.isPresent()) {
 			final CustomerDao customerDao = customerOptional.get();
@@ -102,9 +103,27 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			customerDao.setDocumentImage(savedCustomerDao.getDocumentImage());
 			customerDao.setImage(savedCustomerDao.getImage());
 			savedCustomerDao = customerRepository.saveAndFlush(customerDao);
-			return customerToDaoMapper.convertCustomerDaoToDto(savedCustomerDao);
+			return customerDaoToDtoMapper.convertCustomerDaoToDto(savedCustomerDao);
 		}
 		log.error("Customer not found for id : {}", customer.getId());
 		throw new EntityNotFoundException("Customer Not found : " + customer.getId());
+	}
+
+	@Override
+	public List<Customer> searchCustomers(SearchCustomer searchCustomer) {
+		CustomerDao customerDao = customerDtoToDaoMapper.convertSearchCustomerToDao(searchCustomer);
+		List<CustomerDao> customerDaoList = customerRepository.searchCustomers(customerDao.getFirstName(),
+				customerDao.getLastName(), customerDao.getEmail(), customerDao.getGender(), customerDao.getRegDate(),
+				customerDao.getJoinDate(), customerDao.getBirthdate(), customerDao.getAddress(),
+				customerDao.getMembershipAmount(), customerDao.getMembershipDuration());
+		if (customerDaoList != null  && !customerDaoList.isEmpty()) {
+			final List<Customer> customerList = customerDaoList.stream()
+					.map(customerDaoRet -> customerDaoToDtoMapper.convertCustomerDaoToDto(customerDaoRet))
+					.sorted(Comparator.comparing(Customer::getFirstName)).collect(Collectors.toList());
+
+			return customerList;
+		} else {
+			throw new EntityNotFoundException("Customer Not found ");
+		}
 	}
 }

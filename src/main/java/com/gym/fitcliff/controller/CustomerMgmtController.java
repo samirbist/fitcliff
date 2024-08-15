@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gym.fitcliff.api.AdminApi;
 import com.gym.fitcliff.model.Customer;
+import com.gym.fitcliff.model.SearchCustomer;
 import com.gym.fitcliff.service.CustomerMgmtService;
 
 @RestController
@@ -30,14 +31,13 @@ public class CustomerMgmtController implements AdminApi {
 		Customer savedCustomer = customerMgmtService.saveCustomer(customer);
 		return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
 	}
-	
+
 	@Override
 	@PutMapping(path = "/customer")
 	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
 		Customer savedCustomer = customerMgmtService.updateCustomer(customer);
 		return new ResponseEntity<>(savedCustomer, HttpStatus.OK);
 	}
-
 
 	@Override
 	@GetMapping(path = "/customer/{id}")
@@ -56,4 +56,12 @@ public class CustomerMgmtController implements AdminApi {
 		final List<Customer> customers = customerMgmtService.getCustomers();
 		return new ResponseEntity<>(customers, HttpStatus.OK);
 	}
+
+	@Override
+	@PostMapping("/customer/search")
+	public ResponseEntity<List<Customer>> searchCustomer(@RequestBody  SearchCustomer searchCustomer) {
+		final List<Customer> customers = customerMgmtService.searchCustomers(searchCustomer);
+		return new ResponseEntity<>(customers, HttpStatus.OK);
+	}
+
 }
