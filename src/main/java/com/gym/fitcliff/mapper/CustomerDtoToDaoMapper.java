@@ -109,7 +109,8 @@ public class CustomerDtoToDaoMapper {
 		}
 		GroupDao groupDao = new GroupDao();
 		groupDao.setId(group.getId());
-		// Set other properties from Group to GroupDao if needed
+		groupDao.setName(group.getName());
+		groupDao.setDate(group.getDate());
 		return groupDao;
 	}
 

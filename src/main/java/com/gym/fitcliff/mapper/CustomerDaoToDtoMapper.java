@@ -125,7 +125,8 @@ public class CustomerDaoToDtoMapper {
         }
         Group group = new Group();
         group.setId(groupDao.getId());
-        // Map other fields if necessary.
+        group.setName(groupDao.getName());
+        group.setDate(groupDao.getDate());
         return group;
     }
 

@@ -15,15 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gym.fitcliff.api.AdminApi;
 import com.gym.fitcliff.model.Customer;
+import com.gym.fitcliff.model.Group;
 import com.gym.fitcliff.model.SearchCustomer;
 import com.gym.fitcliff.service.CustomerMgmtService;
+import com.gym.fitcliff.service.GroupMgmtService;
 
 @RestController
 @RequestMapping(value = "/admin")
-public class CustomerMgmtController implements AdminApi {
+public class AdminController implements AdminApi {
 
 	@Autowired
 	private CustomerMgmtService customerMgmtService;
+	
+	@Autowired
+	private GroupMgmtService groupMgmtService;
 
 	@Override
 	@PostMapping(path = "/customer")
@@ -59,9 +64,22 @@ public class CustomerMgmtController implements AdminApi {
 
 	@Override
 	@PostMapping("/customer/search")
-	public ResponseEntity<List<Customer>> searchCustomer(@RequestBody  SearchCustomer searchCustomer) {
+	public ResponseEntity<List<Customer>> searchCustomer(@RequestBody SearchCustomer searchCustomer) {
 		final List<Customer> customers = customerMgmtService.searchCustomers(searchCustomer);
 		return new ResponseEntity<>(customers, HttpStatus.OK);
 	}
 
+	
+
+	@Override
+	@PostMapping("/group")
+	public ResponseEntity<Group> createGroup(@RequestBody Group group) {
+		return new ResponseEntity<>(groupMgmtService.createGroup(group), HttpStatus.CREATED);
+	}
+
+	@Override
+	@GetMapping("/group")
+	public ResponseEntity<List<Group>> getGroups() {
+		return  new ResponseEntity<>(groupMgmtService.getGroup(), HttpStatus.OK);
+	}
 }
