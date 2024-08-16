@@ -16,10 +16,10 @@ spring:
     properties:
       hibernate:
         "[default_schema]": public
-#  data:
-#    mongodb:
-#      uri: mongodb+srv://${mongouser}:${mongopassword}@${mongohost}/?retryWrites=true&w=majority&appName=Cluster0
-#      database: fitcliff-mongo
+  data:
+    mongodb:
+      uri: mongodb+srv://${mongouser}:${mongopassword}@${mongohost}/?retryWrites=true&w=majority&appName=Cluster0
+      database: fitcliff-mongo
   servlet:
     multipart:
       enabled: 'true'
