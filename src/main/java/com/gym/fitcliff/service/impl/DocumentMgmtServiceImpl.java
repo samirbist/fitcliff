@@ -65,12 +65,12 @@ public class DocumentMgmtServiceImpl implements DocumentMgmtService {
 	@Override
 	@Transactional
 	public void deleteIdDocument(Long id) {
-
 		final Optional<DocumentImageDao> documentImageDaoOptional = documentImageRepository.findById(id);
 		if (documentImageDaoOptional.isPresent()) {
 			DocumentImageDao documentImageDao = documentImageDaoOptional.get();
 			documentImageRepository.delete(documentImageDao);
 			mongoDataService.deleteMongoData(documentImageDao.getMongoId());
+			return;
 		}
 		throw new IllegalStateException("Error in deleteing document id :" + id);
 

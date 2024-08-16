@@ -2,8 +2,6 @@ package com.gym.fitcliff.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,13 +23,13 @@ import com.gym.fitcliff.dto.MongoDataDto;
 import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.DocumentImage;
 import com.gym.fitcliff.model.Group;
+import com.gym.fitcliff.model.Image;
 import com.gym.fitcliff.model.SearchCustomer;
 import com.gym.fitcliff.service.CustomerMgmtService;
 import com.gym.fitcliff.service.DocumentMgmtService;
 import com.gym.fitcliff.service.GroupMgmtService;
+import com.gym.fitcliff.service.ImageMgmtService;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,6 +46,9 @@ public class AdminController implements AdminApi {
 
 	@Autowired
 	private DocumentMgmtService documentMgmtService;
+
+	@Autowired
+	private ImageMgmtService imageMgmtService;
 
 	@Autowired
 	private HttpServletResponse response;
@@ -119,16 +119,43 @@ public class AdminController implements AdminApi {
 			MongoDataDto mongoData = documentMgmtService.getIdDocument(id);
 			FileCopyUtils.copy(mongoData.getStream(), response.getOutputStream());
 		} catch (Exception e) {
-			log.error("Error in getting template data for id {} : {} ", id, e);
+			log.error("Error in getting document data for id {} : {} ", id, e);
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok().build();
 	}
 
 	@Override
-	@DeleteMapping("/admin/documentId/{id}")
+	@DeleteMapping("/documentId/{id}")
 	public ResponseEntity<Void> deleteDocumentId(@PathVariable("id") Long id) {
 		documentMgmtService.deleteIdDocument(id);
 		return ResponseEntity.ok().build();
 	}
+
+	@Override
+	@PostMapping("/image")
+	public ResponseEntity<Image> createImage(@RequestParam(value = "fileName", required = false) String fileName,
+			@RequestPart(value = "image", required = false) MultipartFile image) {
+		return new ResponseEntity<>(imageMgmtService.createImage(fileName, image), HttpStatus.CREATED);
+	}
+
+	@Override
+	@GetMapping("/image/{id}")
+	public ResponseEntity<Void> getImage(@PathVariable("id") Long id) {
+		try {
+			MongoDataDto mongoData = imageMgmtService.getImage(id);
+			FileCopyUtils.copy(mongoData.getStream(), response.getOutputStream());
+		} catch (Exception e) {
+			log.error("Error in getting iamge data for id {} : {} ", id, e);
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/image/{id}")
+	public ResponseEntity<Void> deleteImage(@PathVariable("id") Long id) {
+		imageMgmtService.deleteImage(id);
+		return ResponseEntity.ok().build();
+	}
+
 }
