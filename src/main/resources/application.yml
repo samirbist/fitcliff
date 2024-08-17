@@ -32,5 +32,6 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
   file:
-    name: C:/logs/fitcliff-app.log  # Specify the file name and path
+     name: /opt/logs/fitcliff-app.log
+#    name: C:/logs/fitcliff-app.log  # Specify the file name and path
  

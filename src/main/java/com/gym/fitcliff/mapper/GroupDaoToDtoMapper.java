@@ -8,7 +8,7 @@ import com.gym.fitcliff.model.Group;
 @Component
 public class GroupDaoToDtoMapper {
 
-	public Group convertGroupDaoToDto(GroupDao groupDao) {
+	public Group convert(GroupDao groupDao) {
 		Group group = new Group();
 		group.setId(groupDao.getId());
 		group.setName(groupDao.getName());

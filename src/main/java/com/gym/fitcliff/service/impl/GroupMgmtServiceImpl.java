@@ -31,17 +31,17 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 
 	@Override
 	public Group createGroup(Group group) {
-		GroupDao groupDao = groupDtoToDaoMapper.convertGroupDtoToDao(group);
+		GroupDao groupDao = groupDtoToDaoMapper.convert(group);
 		GroupDao savedGroupDao = groupRepository.save(groupDao);
 		log.debug("Group is saved {}", savedGroupDao);
-		return groupDaoToDtoMapper.convertGroupDaoToDto(savedGroupDao);
+		return groupDaoToDtoMapper.convert(savedGroupDao);
 	}
 
 	@Override
 	public List<Group> getGroup() {
 		List<GroupDao> groupDaoList = groupRepository.findAll();
 		final List<Group> groupList = groupDaoList.stream()
-				.map(groupDao -> groupDaoToDtoMapper.convertGroupDaoToDto(groupDao))
+				.map(groupDao -> groupDaoToDtoMapper.convert(groupDao))
 				.sorted(Comparator.comparing(Group::getName)).collect(Collectors.toList());
 		return groupList;
 	}

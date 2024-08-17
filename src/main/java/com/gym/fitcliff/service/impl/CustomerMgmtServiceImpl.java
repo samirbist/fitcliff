@@ -36,12 +36,12 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	@Override
 	public Customer saveCustomer(final Customer customer) {
 		if (IsUniqueEmail(customer)) {
-			final CustomerDao customerDao = customerDtoToDaoMapper.convertCustomerDtoToDao(customer);
+			final CustomerDao customerDao = customerDtoToDaoMapper.convert(customer);
 			customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
 			customerDao.setActive(true);
 			final CustomerDao savedCustomer = customerRepository.save(customerDao);
 			log.debug("Customer is saved {}", savedCustomer);
-			return customerDaoToDtoMapper.convertCustomerDaoToDto(savedCustomer);
+			return customerDaoToDtoMapper.convert(savedCustomer);
 		} else {
 			log.error("Error in saving user as username already exists {}", customer.getFirstName());
 			throw new CustomerException("Customer email already exists", customer.getEmail());
@@ -57,7 +57,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	public Customer getCustomer(Long id) {
 		final Optional<CustomerDao> customerOptional = customerRepository.findById(id);
 		if (customerOptional.isPresent()) {
-			Customer customer = customerDaoToDtoMapper.convertCustomerDaoToDto(customerOptional.get());
+			Customer customer = customerDaoToDtoMapper.convert(customerOptional.get());
 			return customer;
 		}
 		log.error("User not found for id : {}", id);
@@ -69,7 +69,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	public List<Customer> getCustomers() {
 		final List<CustomerDao> customerDaoList = customerRepository.findAll();
 		final List<Customer> customerList = customerDaoList.stream()
-				.map(customerDao -> customerDaoToDtoMapper.convertCustomerDaoToDto(customerDao))
+				.map(customerDao -> customerDaoToDtoMapper.convert(customerDao))
 				.sorted(Comparator.comparing(Customer::getFirstName)).collect(Collectors.toList());
 
 		return customerList;
@@ -77,7 +77,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 
 	@Override
 	public Customer updateCustomer(Customer customer) {
-		CustomerDao savedCustomerDao = customerDtoToDaoMapper.convertCustomerDtoToDao(customer);
+		CustomerDao savedCustomerDao = customerDtoToDaoMapper.convert(customer);
 		final Optional<CustomerDao> customerOptional = customerRepository.findById(customer.getId());
 		if (customerOptional.isPresent()) {
 			final CustomerDao customerDao = customerOptional.get();
@@ -103,7 +103,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			customerDao.setDocumentImage(savedCustomerDao.getDocumentImage());
 			customerDao.setImage(savedCustomerDao.getImage());
 			savedCustomerDao = customerRepository.saveAndFlush(customerDao);
-			return customerDaoToDtoMapper.convertCustomerDaoToDto(savedCustomerDao);
+			return customerDaoToDtoMapper.convert(savedCustomerDao);
 		}
 		log.error("Customer not found for id : {}", customer.getId());
 		throw new EntityNotFoundException("Customer Not found : " + customer.getId());
@@ -118,7 +118,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 				customerDao.getMembershipAmount(), customerDao.getMembershipDuration());
 		if (customerDaoList != null  && !customerDaoList.isEmpty()) {
 			final List<Customer> customerList = customerDaoList.stream()
-					.map(customerDaoRet -> customerDaoToDtoMapper.convertCustomerDaoToDto(customerDaoRet))
+					.map(customerDaoRet -> customerDaoToDtoMapper.convert(customerDaoRet))
 					.sorted(Comparator.comparing(Customer::getFirstName)).collect(Collectors.toList());
 
 			return customerList;

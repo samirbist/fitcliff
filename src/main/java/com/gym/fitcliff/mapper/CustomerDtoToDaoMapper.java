@@ -27,7 +27,7 @@ import com.gym.fitcliff.model.SearchCustomer;
 @Component
 public class CustomerDtoToDaoMapper {
 	
-	public CustomerDao convertCustomerDtoToDao(Customer customer) {
+	public CustomerDao convert(Customer customer) {
 		CustomerDao dao = new CustomerDao();
 		dao.setId(customer.getId());
 		dao.setFirstName(customer.getFirstName());

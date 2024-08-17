@@ -26,7 +26,7 @@ import com.gym.fitcliff.model.IndividualPayment;
 @Component
 public class CustomerDaoToDtoMapper {
 	
-	public Customer convertCustomerDaoToDto(CustomerDao customerDao) {
+	public Customer convert(CustomerDao customerDao) {
 		Customer customer = new Customer(); 
 		customer.setId(customerDao.getId());
 		customer.setFirstName(customerDao.getFirstName());
