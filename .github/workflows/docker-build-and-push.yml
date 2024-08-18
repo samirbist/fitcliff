@@ -47,11 +47,3 @@ jobs:
           file: Dockerfile
           push: true
           tags: samiboy/fitcliff:v1.0
-          
-      - name: Build and push Docker image nginx
-        uses: docker/build-push-action@v3
-        with:
-          context: ./nginx-proxy
-          file: Dockerfile
-          push: true
-          tags: samiboy/nginx-proxy:latest
