@@ -55,4 +55,3 @@ jobs:
           file: Dockerfile
           push: true
           tags: samiboy/nginx-proxy:latest
-
