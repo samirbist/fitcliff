@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build JAR file
-        run: mvn clean package
+        run: mvn clean install
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
