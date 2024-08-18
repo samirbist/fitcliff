@@ -1,0 +1,32 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  fitcliff:
+    image: samiboy/fitcliff:v1.0
+    container_name: fitcliff
+    networks:
+      - fitcliff-network
+    environment:
+      - username=${DB_USERNAME}
+      - password=${DB_PASSWORD}
+      - host=${DB_HOST}
+      - mongouser=${MONGO_USERNAME}
+      - mongopassword=${MONGO_PASSWORD}
+      - mongohost=${MONGO_HOST}
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/logs:/opt/logs
+
+  nginx-proxy:
+    build: .
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    networks:
+      - fitcliff-network
+
+networks:
+  fitcliff-network:
+    driver: bridge
