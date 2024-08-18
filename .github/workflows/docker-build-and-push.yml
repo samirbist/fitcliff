@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'  # Specify the Java distribution (e.g., 'temurin', 'zulu', etc.)
+          
       - name: Build JAR file
         run: mvn clean package    
 
