@@ -1,5 +1,8 @@
 FROM eclipse-temurin:17-jdk-alpine
 
+# Set the working directory
+WORKDIR /app
+
 # Expose port 8080
 EXPOSE 8080
 
