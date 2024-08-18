@@ -1,3 +1,10 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # or your default branch
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,14 +16,27 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-
       - name: Build JAR file
-        run: mvn clean package
+        run: mvn clean package    
 
-      - name: Build Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           file: Dockerfile
           push: true
           tags: samiboy/fitcliff:v1.0
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
+          DOCKER_AUTH_CONFIG: ${{ secrets.DOCKER_CONFIG }}
