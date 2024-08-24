@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gym.fitcliff.entity.CustomerDao;
 import com.gym.fitcliff.entity.DocumentImageDao;
@@ -44,18 +45,21 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	private ImageRepository imageRepository;
 
 	@Override
+	@Transactional
 	public Customer saveCustomer(final Customer customer) {
 		final CustomerDao customerDao = customerDtoToDaoMapper.convert(customer);
 		customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
 		customerDao.setActive(true);
+		
+		customerDao.getPayments().forEach(payment -> payment.setCustomer(customerDao));
 
 		Optional<DocumentImageDao> documentDaoOptional = documentImageRepository
-				.findById(customer.getDocumentImage().getId());
+				.findById(customer.getDocumentImage());
 
 		if (documentDaoOptional.isPresent()) {
 			final DocumentImageDao documentImageDao = documentDaoOptional.get();
 			customerDao.setDocumentImage(documentImageDao);
-			Optional<ImageDao> imageDaoOptional = imageRepository.findById(customer.getImage().getId());
+			Optional<ImageDao> imageDaoOptional = imageRepository.findById(customer.getImage());
 
 			if (imageDaoOptional.isPresent()) {
 				final ImageDao imageDao = imageDaoOptional.get();
@@ -98,6 +102,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	}
 
 	@Override
+	@Transactional
 	public Customer updateCustomer(Customer customer) {
 		CustomerDao savedCustomerDao = customerDtoToDaoMapper.convert(customer);
 		final Optional<CustomerDao> customerOptional = customerRepository.findById(customer.getId());

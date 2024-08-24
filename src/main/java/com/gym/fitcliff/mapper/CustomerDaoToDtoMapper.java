@@ -44,37 +44,37 @@ public class CustomerDaoToDtoMapper {
 		customer.setPayments(indPaymentDaoListToIndPaymentList(customerDao.getPayments()));
         customer.setGroup(groupDaoToGroup(customerDao.getGroup()));
         customer.setMembershipType(membershipTypeToEnum(customerDao.getMembershipType()));
-        customer.setDocumentImage(documentImageDaoToDocumentImage(customerDao.getDocumentImage()));
-        customer.setImage(imageDaoToImage(customerDao.getImage()));
+        customer.setDocumentImage(customerDao.getDocumentImage().getId());
+        customer.setImage(customerDao.getImage().getId());
 		return customer;
 	}
 	
-	private Image imageDaoToImage(ImageDao imageDao) {
-        if (imageDao == null) {
-            return null;
-        }
-        Image image = new Image();
-        image.setId(imageDao.getId());
-        image.setFileName(imageDao.getFileName());
-//        image.setCutomerId(imageDao.getCustomer().getId());
-        image.setCreatedOn(imageDao.getCreatedOn());
-        image.setMongoId(imageDao.getMongoId());
-        return image;
-    }
-	
-	private DocumentImage documentImageDaoToDocumentImage(DocumentImageDao documentImageDao) {
-        if (documentImageDao == null) {
-            return null;
-        }
-        DocumentImage documentImage = new DocumentImage();
-        documentImage.setId(documentImageDao.getId());
-        documentImage.setFileName(documentImageDao.getFileName());
-//        documentImage.setCutomerId(documentImageDao.getCustomer().getId());
-        documentImage.setCreatedOn(documentImageDao.getCreatedOn());
-        documentImage.setMongoId(documentImageDao.getMongoId());
-        return documentImage;
-    }
-	
+//	private Image imageDaoToImage(ImageDao imageDao) {
+//        if (imageDao == null) {
+//            return null;
+//        }
+//        Image image = new Image();
+//        image.setId(imageDao.getId());
+//        image.setFileName(imageDao.getFileName());
+////        image.setCutomerId(imageDao.getCustomer().getId());
+//        image.setCreatedOn(imageDao.getCreatedOn());
+//        image.setMongoId(imageDao.getMongoId());
+//        return image;
+//    }
+//	
+//	private DocumentImage documentImageDaoToDocumentImage(DocumentImageDao documentImageDao) {
+//        if (documentImageDao == null) {
+//            return null;
+//        }
+//        DocumentImage documentImage = new DocumentImage();
+//        documentImage.setId(documentImageDao.getId());
+//        documentImage.setFileName(documentImageDao.getFileName());
+////        documentImage.setCutomerId(documentImageDao.getCustomer().getId());
+//        documentImage.setCreatedOn(documentImageDao.getCreatedOn());
+//        documentImage.setMongoId(documentImageDao.getMongoId());
+//        return documentImage;
+//    }
+//	
 	private MembershipTypeEnum membershipTypeToEnum(MembershipType membershipType) {
         if (membershipType == null) {
             return null;
@@ -95,7 +95,12 @@ public class CustomerDaoToDtoMapper {
             return null;
         }
         IndividualPayment payment = new IndividualPayment();
-        // Map other fields if necessary.
+        payment.setId(paymentDao.getId());
+        payment.setDate(paymentDao.getDate());
+        payment.setAmount(paymentDao.getAmount());
+        payment.setPendingAmount(paymentDao.getPendingAmount());
+        payment.setPaymentType(IndividualPayment.PaymentTypeEnum.valueOf(paymentDao.getPaymentType().name()));
+        payment.setCutomerId(paymentDao.getCustomer().getId());
         return payment;
     }
 	private GenderEnum genderDaoToGender(com.gym.fitcliff.entity.CustomerDao.Gender genderDao) {

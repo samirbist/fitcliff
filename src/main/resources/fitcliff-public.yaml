@@ -559,9 +559,11 @@ components:
         group:
           $ref: '#/components/schemas/Group'
         image:
-          $ref: '#/components/schemas/Image'
+          type: integer
+          format: int64
         documentImage:
-          $ref: '#/components/schemas/DocumentImage'
+          type: integer
+          format: int64
         membershipType:
           type: string
           enum:
@@ -595,7 +597,7 @@ components:
         paymentType:
           type: string
           enum:
-           - Cash
+           - CASH
            - UPI
       required:
         - cutomerId
@@ -620,7 +622,7 @@ components:
         paymentType:
           type: string
           enum:
-           - Cash
+           - CASH
            - UPI
       required:
         - groupId

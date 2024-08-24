@@ -60,7 +60,7 @@ public class CustomerDao {
     @Column(nullable = false)
     private MembershipDuration membershipDuration;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IndividualPaymentDao> payments;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -92,7 +92,7 @@ public class CustomerDao {
         INDIVIDUAL, GROUP
     }
     
-    
+  
     public void addPhone(final PhoneDao phone) {
         phones.add(phone);
         phone.setCustomer(this);

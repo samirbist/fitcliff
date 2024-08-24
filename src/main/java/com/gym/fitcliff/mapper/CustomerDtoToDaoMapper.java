@@ -1,6 +1,5 @@
 package com.gym.fitcliff.mapper;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +18,7 @@ import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.Customer.GenderEnum;
 import com.gym.fitcliff.model.Customer.MembershipDurationEnum;
 import com.gym.fitcliff.model.Customer.MembershipTypeEnum;
-import com.gym.fitcliff.model.DocumentImage;
 import com.gym.fitcliff.model.Group;
-import com.gym.fitcliff.model.Image;
 import com.gym.fitcliff.model.IndividualPayment;
 import com.gym.fitcliff.model.SearchCustomer;
 
@@ -113,27 +110,21 @@ public class CustomerDtoToDaoMapper {
 		return groupDao;
 	}
 
-	private DocumentImageDao documentImageToDocumentImageDao(DocumentImage documentImage) {
+	private DocumentImageDao documentImageToDocumentImageDao(Long documentImage) {
 		if (documentImage == null) {
 			return null;
 		}
 		DocumentImageDao documentImageDao = new DocumentImageDao();
-		documentImageDao.setId(documentImage.getId());
-		documentImageDao.setCreatedOn(documentImage.getCreatedOn());
-		documentImageDao.setFileName(documentImage.getFileName());
-		documentImageDao.setMongoId(documentImage.getMongoId());
+		documentImageDao.setId(documentImage);
 		return documentImageDao;
 	}
 
-	private ImageDao imageToImageDao(Image image) {
-		if (image == null) {
+	private ImageDao imageToImageDao(Long imageId) {
+		if (imageId == null) {
 			return null;
 		}
 		ImageDao imageDao = new ImageDao();
-		imageDao.setId(image.getId());
-		imageDao.setCreatedOn(image.getCreatedOn());
-		imageDao.setFileName(image.getFileName());
-		imageDao.setMongoId(image.getMongoId());
+		imageDao.setId(imageId);
 		return imageDao;
 	}
 
@@ -145,7 +136,10 @@ public class CustomerDtoToDaoMapper {
 		return payments.stream().map(payment -> {
 			IndividualPaymentDao paymentDao = new IndividualPaymentDao();
 			paymentDao.setId(payment.getId());
-			// Set other properties from IndividualPayment to IndividualPaymentDao if needed
+			paymentDao.setDate(payment.getDate());
+			paymentDao.setAmount(payment.getAmount());
+			paymentDao.setPendingAmount(payment.getPendingAmount());
+			paymentDao.setPaymentType(IndividualPaymentDao.PaymentType.valueOf(payment.getPaymentType().name()));
 			return paymentDao;
 		}).collect(Collectors.toList());
 	}
