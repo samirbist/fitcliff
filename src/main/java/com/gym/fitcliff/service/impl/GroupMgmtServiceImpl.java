@@ -1,5 +1,6 @@
 package com.gym.fitcliff.service.impl;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 	@Override
 	public Group createGroup(Group group) {
 		GroupDao groupDao = groupDtoToDaoMapper.convert(group);
+		groupDao.setDate(LocalDate.now());
 		GroupDao savedGroupDao = groupRepository.save(groupDao);
 		log.debug("Group is saved {}", savedGroupDao);
 		return groupDaoToDtoMapper.convert(savedGroupDao);

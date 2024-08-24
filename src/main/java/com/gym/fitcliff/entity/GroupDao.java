@@ -1,11 +1,17 @@
 package com.gym.fitcliff.entity;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +28,7 @@ public class GroupDao {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(name="grpname", nullable = false, unique=true)
 	private String name;
 
 	private LocalDate date;
