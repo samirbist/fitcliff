@@ -525,12 +525,6 @@ components:
           type: array
           items:
             type: string
-        photoMongoId:
-          type: string
-          example: mongodb id
-        docMongoId:
-          type: string
-          example: mongodb id
         gender:
          type: string
          enum:

@@ -33,8 +33,6 @@ public class CustomerDaoToDtoMapper {
 		customer.setLastName(customerDao.getLastName());
 		customer.setEmail(customerDao.getEmail());
 		customer.setPhones(phoneListToStringList(customerDao.getPhones())); 
-		customer.setPhotoMongoId(customerDao.getPhotoMongoId());
-		customer.setDocMongoId(customerDao.getDocMongoId());
 		customer.setGender(genderDaoToGender(customerDao.getGender()));
 		customer.setIsActive(customerDao.isActive());
 		customer.setRegDate(customerDao.getRegDate());
@@ -56,7 +54,11 @@ public class CustomerDaoToDtoMapper {
             return null;
         }
         Image image = new Image();
-        // Map other fields if necessary.
+        image.setId(imageDao.getId());
+        image.setFileName(imageDao.getFileName());
+//        image.setCutomerId(imageDao.getCustomer().getId());
+        image.setCreatedOn(imageDao.getCreatedOn());
+        image.setMongoId(imageDao.getMongoId());
         return image;
     }
 	
@@ -65,7 +67,11 @@ public class CustomerDaoToDtoMapper {
             return null;
         }
         DocumentImage documentImage = new DocumentImage();
-        // Map other fields if necessary.
+        documentImage.setId(documentImageDao.getId());
+        documentImage.setFileName(documentImageDao.getFileName());
+//        documentImage.setCutomerId(documentImageDao.getCustomer().getId());
+        documentImage.setCreatedOn(documentImageDao.getCreatedOn());
+        documentImage.setMongoId(documentImageDao.getMongoId());
         return documentImage;
     }
 	

@@ -1,5 +1,6 @@
 package com.gym.fitcliff.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +35,6 @@ public class CustomerDtoToDaoMapper {
 		dao.setLastName(customer.getLastName());
 		dao.setEmail(customer.getEmail());
 		dao.setPhones(phoneListToPhoneDaoList(customer.getPhones()));
-		dao.setPhotoMongoId(customer.getPhotoMongoId());
-		dao.setDocMongoId(customer.getDocMongoId());
 		dao.setGender(genderToGenderDao(customer.getGender()));
 		dao.setActive(customer.getIsActive());
 		dao.setRegDate(customer.getRegDate());
@@ -120,7 +119,9 @@ public class CustomerDtoToDaoMapper {
 		}
 		DocumentImageDao documentImageDao = new DocumentImageDao();
 		documentImageDao.setId(documentImage.getId());
-		// Set other properties from DocumentImage to DocumentImageDao if needed
+		documentImageDao.setCreatedOn(documentImage.getCreatedOn());
+		documentImageDao.setFileName(documentImage.getFileName());
+		documentImageDao.setMongoId(documentImage.getMongoId());
 		return documentImageDao;
 	}
 
@@ -130,7 +131,9 @@ public class CustomerDtoToDaoMapper {
 		}
 		ImageDao imageDao = new ImageDao();
 		imageDao.setId(image.getId());
-		// Set other properties from Image to ImageDao if needed
+		imageDao.setCreatedOn(image.getCreatedOn());
+		imageDao.setFileName(image.getFileName());
+		imageDao.setMongoId(image.getMongoId());
 		return imageDao;
 	}
 

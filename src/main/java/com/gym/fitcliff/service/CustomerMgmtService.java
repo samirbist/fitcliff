@@ -15,6 +15,8 @@ public interface CustomerMgmtService {
 
 	Customer updateCustomer(Customer customer);
 
+	List<Customer> searchCustomersBy(String text);
+
 	List<Customer> searchCustomers(SearchCustomer searchCustomer);
 
 

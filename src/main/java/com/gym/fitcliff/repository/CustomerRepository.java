@@ -16,7 +16,7 @@ public interface CustomerRepository extends JpaRepository<CustomerDao, Long> {
 
 	Optional<CustomerDao> findByEmail(String email);
 
-	@Query("SELECT c FROM CustomerDao c " + "WHERE (:firstName IS NULL OR c.firstName LIKE %:firstName%) "
+	@Query("SELECT c FROM CustomerDao c WHERE (:firstName IS NULL OR c.firstName LIKE %:firstName%) "
 			+ "AND (:lastName IS NULL OR c.lastName LIKE %:lastName%) " + "AND (:email IS NULL OR c.email = :email) "
 			+ "AND (:gender IS NULL OR c.gender = :gender) " + "AND (:regDate IS NULL OR c.regDate = :regDate) "
 			+ "AND (:joinDate IS NULL OR c.joinDate = :joinDate) "
@@ -29,4 +29,7 @@ public interface CustomerRepository extends JpaRepository<CustomerDao, Long> {
 			@Param("joinDate") LocalDate joinDate, @Param("birthdate") LocalDate birthdate,
 			@Param("address") String address, @Param("membershipAmount") String membershipAmount,
 			@Param("membershipDuration") MembershipDuration membershipDuration);
+
+	@Query(value = "SELECT * FROM public.customer WHERE customer_text_idx @@ phraseto_tsquery('english', :searchPhrase)", nativeQuery = true)
+	List<CustomerDao> searchCustomers(@Param("searchPhrase") String searchPhrase);
 }

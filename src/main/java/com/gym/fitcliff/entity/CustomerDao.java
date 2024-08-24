@@ -34,12 +34,6 @@ public class CustomerDao {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhoneDao> phones;
 
-    @Column
-    private String photoMongoId;
-    
-    @Column
-    private String docMongoId;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;

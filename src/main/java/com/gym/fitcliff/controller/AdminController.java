@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,8 @@ import com.gym.fitcliff.service.DocumentMgmtService;
 import com.gym.fitcliff.service.GroupMgmtService;
 import com.gym.fitcliff.service.ImageMgmtService;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +55,13 @@ public class AdminController implements AdminApi {
 
 	@Autowired
 	private HttpServletResponse response;
+
+	@Override
+	@GetMapping(path = "/customer/search/{text}")
+	public ResponseEntity<List<Customer>> searchCustomerBy(@PathVariable("text") String text) {
+		final List<Customer> customers = customerMgmtService.searchCustomersBy(text);
+		return new ResponseEntity<>(customers, HttpStatus.OK);
+	}
 
 	@Override
 	@PostMapping(path = "/customer")
