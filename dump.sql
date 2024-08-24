@@ -182,7 +182,7 @@ CREATE TABLE public.customer (
 	image_id int8 NULL,
 	address text NOT NULL,
 	doc_mongo_id varchar(255) NULL,
-	email varchar(255) NOT NULL,
+	email varchar(255)  NULL,
 	first_name varchar(255) NOT NULL,
 	gender varchar(255) NOT NULL,
 	last_name varchar(255) NOT NULL,
@@ -191,7 +191,6 @@ CREATE TABLE public.customer (
 	membership_type varchar(255) NOT NULL,
 	photo_mongo_id varchar(255) NULL,
 	CONSTRAINT customer_document_id_key UNIQUE (document_id),
-	CONSTRAINT customer_email_key UNIQUE (email),
 	CONSTRAINT customer_gender_check CHECK (((gender)::text = ANY ((ARRAY['MALE'::character varying, 'FEMALE'::character varying])::text[]))),
 	CONSTRAINT customer_image_id_key UNIQUE (image_id),
 	CONSTRAINT customer_membership_duration_check CHECK (((membership_duration)::text = ANY ((ARRAY['ONE_MONTH'::character varying, 'THREE_MONTHS'::character varying, 'SIX_MONTHS'::character varying, 'ONE_YEAR'::character varying])::text[]))),
@@ -201,6 +200,30 @@ CREATE TABLE public.customer (
 	CONSTRAINT cutomer_image FOREIGN KEY (image_id) REFERENCES public.image(id),
 	CONSTRAINT cutomer_document FOREIGN KEY (document_id) REFERENCES public."document"(id)
 );
+
+ALTER TABLE public.customer ADD COLUMN customer_text_idx tsvector;
+
+-- Create a function to update the tsvector column
+CREATE OR REPLACE FUNCTION update_customer_text_idx() RETURNS trigger AS $$
+BEGIN
+   NEW.customer_text_idx := to_tsvector('english', 
+       coalesce(NEW.first_name, '') || ' ' || 
+       coalesce(NEW.last_name, '') || ' ' || 
+       coalesce(NEW.address, '') || ' ' || 
+       coalesce(NEW.email, ''));
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger
+CREATE TRIGGER trigger_update_customer_text_idx
+BEFORE INSERT OR UPDATE ON public.customer
+FOR EACH ROW
+EXECUTE FUNCTION update_customer_text_idx();
+
+CREATE INDEX idx_fts ON public.customer USING gin(customer_text_idx);
+
+
 
 -- Permissions
 

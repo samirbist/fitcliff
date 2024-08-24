@@ -28,7 +28,7 @@ public class CustomerDao {
     @Column(nullable = false, length = 255)
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = true, unique = false, length = 255)
     private String email;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)

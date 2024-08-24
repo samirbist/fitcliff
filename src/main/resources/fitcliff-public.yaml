@@ -244,6 +244,36 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/ServerError'
+  '/admin/customer/search/{text}':
+    get:
+      description: Search Customers
+      tags: [ customer ]
+      operationId: searchCustomerBy
+      parameters:
+        - in: path
+          name: text
+          required: true
+          schema:
+            type: string
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
   '/admin/customer/search':
     post:
       description: Search Customers
@@ -308,7 +338,7 @@ paths:
     get:
       description: Get Customer list
       tags:
-        - user
+        - customer
       operationId: getCustomers
       security:
         - oidc: [ ]
@@ -546,7 +576,6 @@ components:
       required:
         - firstName
         - gender
-        - email
         - phones
         - joinDate
         - birthdate
@@ -660,7 +689,7 @@ components:
     Created:
       description: Stored new data for that reference period (i. e. nothing existed before)
     Unauthorized:
-      description: Unauthorized (invalid credentials or deactivated user)
+      description: Unauthorized (invalid credentials or deactivated customer)
     ValidationError:
       description: Validation errors occured
       content:

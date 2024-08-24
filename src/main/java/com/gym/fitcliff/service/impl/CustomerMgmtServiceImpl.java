@@ -35,23 +35,18 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 
 	@Override
 	public Customer saveCustomer(final Customer customer) {
-		if (IsUniqueEmail(customer)) {
 			final CustomerDao customerDao = customerDtoToDaoMapper.convert(customer);
 			customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
 			customerDao.setActive(true);
 			final CustomerDao savedCustomer = customerRepository.save(customerDao);
 			log.debug("Customer is saved {}", savedCustomer);
 			return customerDaoToDtoMapper.convert(savedCustomer);
-		} else {
-			log.error("Error in saving user as username already exists {}", customer.getFirstName());
-			throw new CustomerException("Customer email already exists", customer.getEmail());
-		}
+	
 	}
-
-	private boolean IsUniqueEmail(final Customer customer) {
-		final Optional<CustomerDao> customerDaoOptional = customerRepository.findByEmail(customer.getEmail());
-		return customerDaoOptional.isEmpty();
-	}
+//	private boolean IsUniqueEmail(final Customer customer) {
+//		final Optional<CustomerDao> customerDaoOptional = customerRepository.findByEmail(customer.getEmail());
+//		return customerDaoOptional.isEmpty();
+//	}
 
 	@Override
 	public Customer getCustomer(Long id) {
