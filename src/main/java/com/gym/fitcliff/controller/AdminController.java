@@ -2,6 +2,8 @@ package com.gym.fitcliff.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -166,6 +168,11 @@ public class AdminController implements AdminApi {
 	public ResponseEntity<Void> deleteImage(@PathVariable("id") Long id) {
 		imageMgmtService.deleteImage(id);
 		return ResponseEntity.ok().build();
+	}
+
+	@PutMapping("/group")
+	public ResponseEntity<Group> updateGroup(@RequestBody Group group) {
+		return new ResponseEntity<>(groupMgmtService.updateGroup(group), HttpStatus.OK);
 	}
 
 }

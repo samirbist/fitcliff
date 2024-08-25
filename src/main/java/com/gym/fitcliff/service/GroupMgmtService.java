@@ -10,4 +10,6 @@ public interface GroupMgmtService {
 
 	List<Group> getGroup();
 
+	Group updateGroup(Group group);
+
 }
