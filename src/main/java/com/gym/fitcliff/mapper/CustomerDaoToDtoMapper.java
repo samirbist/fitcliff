@@ -8,20 +8,16 @@ import org.springframework.stereotype.Component;
 import com.gym.fitcliff.entity.CustomerDao;
 import com.gym.fitcliff.entity.CustomerDao.MembershipDuration;
 import com.gym.fitcliff.entity.CustomerDao.MembershipType;
-import com.gym.fitcliff.entity.DocumentImageDao;
 import com.gym.fitcliff.entity.GroupDao;
 import com.gym.fitcliff.entity.GroupPaymentDao;
-import com.gym.fitcliff.entity.ImageDao;
 import com.gym.fitcliff.entity.IndividualPaymentDao;
 import com.gym.fitcliff.entity.PhoneDao;
 import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.Customer.GenderEnum;
 import com.gym.fitcliff.model.Customer.MembershipDurationEnum;
 import com.gym.fitcliff.model.Customer.MembershipTypeEnum;
-import com.gym.fitcliff.model.DocumentImage;
 import com.gym.fitcliff.model.Group;
 import com.gym.fitcliff.model.GroupPayment;
-import com.gym.fitcliff.model.Image;
 import com.gym.fitcliff.model.IndividualPayment;
 
 @Component
