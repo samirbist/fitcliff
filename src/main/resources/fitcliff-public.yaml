@@ -244,6 +244,33 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/ServerError'
+    put:
+      description: Update group
+      tags: [ group ]
+      operationId: updateGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+        required: true
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
   '/admin/customer/search/{text}':
     get:
       description: Search Customers

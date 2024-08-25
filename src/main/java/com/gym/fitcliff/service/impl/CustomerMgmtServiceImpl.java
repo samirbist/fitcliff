@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gym.fitcliff.entity.CustomerDao;
 import com.gym.fitcliff.entity.DocumentImageDao;
+import com.gym.fitcliff.entity.GroupDao;
 import com.gym.fitcliff.entity.ImageDao;
 import com.gym.fitcliff.exception.CustomerException;
 import com.gym.fitcliff.mapper.CustomerDtoToDaoMapper;
@@ -19,6 +20,7 @@ import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.SearchCustomer;
 import com.gym.fitcliff.repository.CustomerRepository;
 import com.gym.fitcliff.repository.DocumentImageRepository;
+import com.gym.fitcliff.repository.GroupRepository;
 import com.gym.fitcliff.repository.ImageRepository;
 import com.gym.fitcliff.service.CustomerMgmtService;
 
@@ -44,17 +46,19 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	@Autowired
 	private ImageRepository imageRepository;
 
+	@Autowired
+	private GroupRepository groupRepository;
+
 	@Override
 	@Transactional
 	public Customer saveCustomer(final Customer customer) {
 		final CustomerDao customerDao = customerDtoToDaoMapper.convert(customer);
 		customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
 		customerDao.setActive(true);
-		
+
 		customerDao.getPayments().forEach(payment -> payment.setCustomer(customerDao));
 
-		Optional<DocumentImageDao> documentDaoOptional = documentImageRepository
-				.findById(customer.getDocumentImage());
+		Optional<DocumentImageDao> documentDaoOptional = documentImageRepository.findById(customer.getDocumentImage());
 
 		if (documentDaoOptional.isPresent()) {
 			final DocumentImageDao documentImageDao = documentDaoOptional.get();
@@ -64,9 +68,13 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			if (imageDaoOptional.isPresent()) {
 				final ImageDao imageDao = imageDaoOptional.get();
 				customerDao.setImage(imageDao);
-				final CustomerDao savedCustomer = customerRepository.save(customerDao);
-				log.debug("Customer is saved {}", savedCustomer);
-				return customerDaoToDtoMapper.convert(savedCustomer);
+				Optional<GroupDao> groupDaoOptional = groupRepository.findById(customer.getGroup().getId());
+				if (groupDaoOptional.isPresent()) {
+					customerDao.setGroup(groupDaoOptional.get());
+					final CustomerDao savedCustomer = customerRepository.save(customerDao);
+					log.debug("Customer is saved {}", savedCustomer);
+					return customerDaoToDtoMapper.convert(savedCustomer);
+				}
 			}
 
 		}
