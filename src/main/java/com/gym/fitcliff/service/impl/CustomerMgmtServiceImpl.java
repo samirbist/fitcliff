@@ -23,6 +23,8 @@ import com.gym.fitcliff.repository.DocumentImageRepository;
 import com.gym.fitcliff.repository.GroupRepository;
 import com.gym.fitcliff.repository.ImageRepository;
 import com.gym.fitcliff.service.CustomerMgmtService;
+import com.gym.fitcliff.service.DocumentMgmtService;
+import com.gym.fitcliff.service.ImageMgmtService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +50,12 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 
 	@Autowired
 	private GroupRepository groupRepository;
+
+	@Autowired
+	private ImageMgmtService imageMgmtService;
+
+	@Autowired
+	private DocumentMgmtService documentMgmtService;
 
 	@Override
 	@Transactional
@@ -82,10 +90,6 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 		throw new CustomerException("Error in creating customer", customer.getFirstName());
 
 	}
-//	private boolean IsUniqueEmail(final Customer customer) {
-//		final Optional<CustomerDao> customerDaoOptional = customerRepository.findByEmail(customer.getEmail());
-//		return customerDaoOptional.isEmpty();
-//	}
 
 	@Override
 	public Customer getCustomer(Long id) {
@@ -133,10 +137,31 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			savedCustomerDao.getPayments().forEach(customerDao::addIndividualPayment);
 			customerDao.setGroup(savedCustomerDao.getGroup());
 			customerDao.setMembershipType(savedCustomerDao.getMembershipType());
-			customerDao.setDocumentImage(savedCustomerDao.getDocumentImage());
-			customerDao.setImage(savedCustomerDao.getImage());
-			savedCustomerDao = customerRepository.saveAndFlush(customerDao);
-			return customerDaoToDtoMapper.convert(savedCustomerDao);
+			Optional<DocumentImageDao> documentDaoOptional = documentImageRepository
+					.findById(customer.getDocumentImage());
+			if (documentDaoOptional.isPresent()) {
+				DocumentImageDao documentDao = documentDaoOptional.get();
+				Long existingDocumentId = customerDao.getDocumentImage().getId();
+				customerDao.setDocumentImage(documentDao);
+				Optional<ImageDao> imageDaoOptional = imageRepository.findById(customer.getImage());
+				if (imageDaoOptional.isPresent()) {
+					final ImageDao imageDao = imageDaoOptional.get();
+					Long existingImageId = customerDao.getImage().getId();
+					customerDao.setImage(imageDao);
+					savedCustomerDao = customerRepository.saveAndFlush(customerDao);
+					if (!customer.getDocumentImage().equals(existingDocumentId)) {
+						documentMgmtService.deleteIdDocument(existingDocumentId);
+					}
+					if (!customer.getImage().equals(existingImageId)) {
+						imageMgmtService.deleteImage(existingImageId);
+					}
+					return customerDaoToDtoMapper.convert(savedCustomerDao);
+				} else {
+					throw new EntityNotFoundException("Image id does not exists :" + customer.getImage());
+				}
+			} else {
+				throw new EntityNotFoundException("Document id does not exists :" + customer.getDocumentImage());
+			}
 		}
 		log.error("Customer not found for id : {}", customer.getId());
 		throw new EntityNotFoundException("Customer Not found : " + customer.getId());
