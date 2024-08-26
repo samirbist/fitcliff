@@ -1,5 +1,6 @@
 package com.gym.fitcliff.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -196,6 +197,22 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			return customerList;
 		} else {
 			return List.of();
+		}
+	}
+
+	@Override
+	public List<Customer> getCustomersByGroupId(Long id) {
+		Optional<GroupDao> groupDaoOpional = groupRepository.findById(id);
+		if (groupDaoOpional.isPresent()) {
+			GroupDao groupDao = groupDaoOpional.get();
+			List<CustomerDao> customerDaoList = groupDao.getCustomers();
+			List<Customer> customerList = new ArrayList<>();
+			if (customerDaoList != null && !customerDaoList.isEmpty()) {
+				customerDaoList.forEach(customerDao -> customerList.add(customerDaoToDtoMapper.convert(customerDao)));
+			}
+			return customerList;
+		} else {
+			throw new EntityNotFoundException("Group Not found for id " + id);
 		}
 	}
 }

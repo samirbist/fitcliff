@@ -19,5 +19,7 @@ public interface CustomerMgmtService {
 
 	List<Customer> searchCustomers(SearchCustomer searchCustomer);
 
+	List<Customer> getCustomersByGroupId(Long id);
+
 
 }
