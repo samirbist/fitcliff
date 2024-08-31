@@ -493,7 +493,7 @@ components:
           example: mongodb id
       required:
         - fileName
-        - createdBy
+        - cutomerId
         - createdOn
         - mongoId
     Image:
@@ -515,7 +515,7 @@ components:
           example: mongodb id
       required:
         - fileName
-        - createdBy
+        - cutomerId
         - createdOn
         - mongoId
     SearchCustomer:
