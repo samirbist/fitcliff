@@ -61,9 +61,9 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	@Override
 	@Transactional
 	public Customer saveCustomer(final Customer customer) {
+		customer.setIsActive(true);
 		final CustomerDao customerDao = customerDtoToDaoMapper.convert(customer);
 		customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
-		customerDao.setActive(true);
 
 		customerDao.getPayments().forEach(payment -> payment.setCustomer(customerDao));
 
