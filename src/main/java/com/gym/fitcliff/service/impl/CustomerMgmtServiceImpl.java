@@ -77,17 +77,22 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			if (imageDaoOptional.isPresent()) {
 				final ImageDao imageDao = imageDaoOptional.get();
 				customerDao.setImage(imageDao);
+				if(customer.getGroup() != null ) {
 				Optional<GroupDao> groupDaoOptional = groupRepository.findById(customer.getGroup().getId());
 				if (groupDaoOptional.isPresent()) {
 					customerDao.setGroup(groupDaoOptional.get());
-					final CustomerDao savedCustomer = customerRepository.save(customerDao);
-					log.debug("Customer is saved {}", savedCustomer);
-					return customerDaoToDtoMapper.convert(savedCustomer);
+				}else {
+					customerDao.setGroup(null);
 				}
+				
+			}else {
+				customerDao.setGroup(null);
 			}
-
+				final CustomerDao savedCustomer = customerRepository.save(customerDao);
+				log.debug("Customer is saved {}", savedCustomer);
+				return customerDaoToDtoMapper.convert(savedCustomer);
 		}
-
+		}
 		throw new CustomerException("Error in creating customer", customer.getFirstName());
 
 	}
