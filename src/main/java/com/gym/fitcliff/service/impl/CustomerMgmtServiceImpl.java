@@ -63,7 +63,6 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	public Customer saveCustomer(final Customer customer) {
 		customer.setIsActive(true);
 		final CustomerDao customerDao = customerDtoToDaoMapper.convert(customer);
-		customerDao.getPhones().forEach(phone -> phone.setCustomer(customerDao));
 
 		customerDao.getPayments().forEach(payment -> payment.setCustomer(customerDao));
 
@@ -126,12 +125,14 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 		final Optional<CustomerDao> customerOptional = customerRepository.findById(customer.getId());
 		if (customerOptional.isPresent()) {
 			final CustomerDao customerDao = customerOptional.get();
-			customerDao.getPhones().clear();
+//			customerDao.getPhones().clear();
 			customerDao.getPayments().clear();
-			customerRepository.save(customerDao);
+//			customerRepository.save(customerDao);
 			customerDao.setFirstName(savedCustomerDao.getFirstName());
 			customerDao.setLastName(savedCustomerDao.getLastName());
-			savedCustomerDao.getPhones().forEach(customerDao::addPhone);
+//			savedCustomerDao.getPhones().forEach(customerDao::addPhone);
+			customerDao.setPhone(savedCustomerDao.getPhone());
+			
 			customerDao.setGender(savedCustomerDao.getGender());
 			customerDao.setActive(savedCustomerDao.isActive());
 			customerDao.setRegDate(savedCustomerDao.getRegDate());
