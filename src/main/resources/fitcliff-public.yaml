@@ -540,6 +540,8 @@ components:
          enum:
           - MALE
           - FEMALE
+        phone:
+          type: string
         regDate:
           type: string
           format: date
