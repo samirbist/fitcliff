@@ -37,7 +37,9 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 	public Group createGroup(Group group) {
 		if (isGroupNameUnique(group.getName())) {
 			GroupDao groupDao = groupDtoToDaoMapper.convert(group);
-			groupDao.setDate(LocalDate.now());
+			if (groupDao.getDate() == null) {
+				groupDao.setDate(LocalDate.now());
+			}
 			GroupDao savedGroupDao = groupRepository.save(groupDao);
 			log.debug("Group is saved {}", savedGroupDao);
 			return groupDaoToDtoMapper.convert(savedGroupDao);
