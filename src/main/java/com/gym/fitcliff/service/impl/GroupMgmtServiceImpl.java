@@ -68,6 +68,8 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 			GroupDao savedGroupDao = groupDaoOptional.get();
 			savedGroupDao.setName(groupDao.getName());
 			savedGroupDao.setDate(groupDao.getDate());
+			savedGroupDao.setMembershipAmount(groupDao.getMembershipAmount());
+			savedGroupDao.setMembershipDuration(groupDao.getMembershipDuration());
 			if (savedGroupDao.getPayments() != null) {
 				savedGroupDao.getPayments().clear();
 			}

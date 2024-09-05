@@ -152,6 +152,7 @@ public class CustomerDtoToDaoMapper {
 		dao.setJoinDate(customer.getJoinDate());
 		dao.setBirthdate(customer.getBirthdate());
 		dao.setAddress(customer.getAddress());
+		dao.setPhone(customer.getPhone());
 		dao.setMembershipAmount(customer.getMembershipAmount());
 		dao.setMembershipDuration(searchEnumToMembershipDuration(customer.getMembershipDuration()));
 		return dao;

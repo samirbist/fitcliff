@@ -178,7 +178,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	public List<Customer> searchCustomers(SearchCustomer searchCustomer) {
 		CustomerDao customerDao = customerDtoToDaoMapper.convertSearchCustomerToDao(searchCustomer);
 		List<CustomerDao> customerDaoList = customerRepository.searchCustomers(customerDao.getFirstName(),
-				customerDao.getLastName(), customerDao.getEmail(), customerDao.getGender(), customerDao.getRegDate(),
+				customerDao.getLastName(), customerDao.getPhone(), customerDao.getEmail(), customerDao.getGender(), customerDao.getRegDate(),
 				customerDao.getJoinDate(), customerDao.getBirthdate(), customerDao.getAddress(),
 				customerDao.getMembershipAmount(), customerDao.getMembershipDuration());
 		if (customerDaoList != null && !customerDaoList.isEmpty()) {
