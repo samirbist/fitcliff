@@ -13,7 +13,6 @@ import com.gym.fitcliff.entity.DocumentImageDao;
 import com.gym.fitcliff.entity.GroupDao;
 import com.gym.fitcliff.entity.ImageDao;
 import com.gym.fitcliff.entity.IndividualPaymentDao;
-import com.gym.fitcliff.entity.PhoneDao;
 import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.Customer.GenderEnum;
 import com.gym.fitcliff.model.Customer.MembershipDurationEnum;
@@ -31,7 +30,7 @@ public class CustomerDtoToDaoMapper {
 		dao.setFirstName(customer.getFirstName());
 		dao.setLastName(customer.getLastName());
 		dao.setEmail(customer.getEmail());
-		dao.setPhones(phoneListToPhoneDaoList(customer.getPhones()));
+		dao.setPhone(customer.getPhone());
 		dao.setGender(genderToGenderDao(customer.getGender()));
 		dao.setActive(customer.getIsActive());
 		dao.setRegDate(customer.getRegDate());
@@ -87,18 +86,6 @@ public class CustomerDtoToDaoMapper {
 		return Gender.valueOf(genderEnum.name());
 	}
 
-	private List<PhoneDao> phoneListToPhoneDaoList(List<String> phones) {
-		if (phones == null || phones.isEmpty()) {
-			return List.of(); // Return an empty list if the input is empty
-		}
-
-		return phones.stream().map(phone -> {
-			PhoneDao dao = new PhoneDao();
-			dao.setNumber(phone);
-			return dao;
-		}).collect(Collectors.toList());
-	}
-
 	private GroupDao groupToGroupDao(Group group) {
 		if (group == null) {
 			return null;
@@ -107,8 +94,17 @@ public class CustomerDtoToDaoMapper {
 		groupDao.setId(group.getId());
 		groupDao.setName(group.getName());
 		groupDao.setDate(group.getDate());
+		groupDao.setMembershipAmount(group.getMembershipAmount());
+//		groupDao.setMembershipDuration(groupEnumToMembershipDuration(group.getMembershipDuration()));
 		return groupDao;
 	}
+	
+//	private GroupDao.MembershipDuration groupEnumToMembershipDuration(Group.MembershipDurationEnum membershipDurationEnum) {
+//		if (membershipDurationEnum == null) {
+//			return null;
+//		}
+//		return GroupDao.MembershipDuration.valueOf(membershipDurationEnum.name());
+//	}
 
 	private DocumentImageDao documentImageToDocumentImageDao(Long documentImage) {
 		if (documentImage == null) {
@@ -156,6 +152,7 @@ public class CustomerDtoToDaoMapper {
 		dao.setJoinDate(customer.getJoinDate());
 		dao.setBirthdate(customer.getBirthdate());
 		dao.setAddress(customer.getAddress());
+		dao.setPhone(customer.getPhone());
 		dao.setMembershipAmount(customer.getMembershipAmount());
 		dao.setMembershipDuration(searchEnumToMembershipDuration(customer.getMembershipDuration()));
 		return dao;

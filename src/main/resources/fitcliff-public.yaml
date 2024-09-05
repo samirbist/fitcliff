@@ -540,6 +540,8 @@ components:
          enum:
           - MALE
           - FEMALE
+        phone:
+          type: string
         regDate:
           type: string
           format: date
@@ -580,10 +582,8 @@ components:
           exclusiveMinimum: true
           maxLength: 255
           example: a.b@gmail.com
-        phones:
-          type: array
-          items:
-            type: string
+        phone:
+          type: string
         gender:
          type: string
          enum:
@@ -631,7 +631,7 @@ components:
       required:
         - firstName
         - gender
-        - phones
+        - phone
         - joinDate
         - birthdate
         - address
@@ -698,6 +698,15 @@ components:
         date:
           type: string
           format: date
+        membershipAmount:
+          type: string
+        membershipDuration:
+          type: string
+          enum:
+           - ONE_MONTH
+           - THREE_MONTHS
+           - SIX_MONTHS
+           - ONE_YEAR
         payments:
           type: array
           items:

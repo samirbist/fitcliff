@@ -11,7 +11,6 @@ import com.gym.fitcliff.entity.CustomerDao.MembershipType;
 import com.gym.fitcliff.entity.GroupDao;
 import com.gym.fitcliff.entity.GroupPaymentDao;
 import com.gym.fitcliff.entity.IndividualPaymentDao;
-import com.gym.fitcliff.entity.PhoneDao;
 import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.Customer.GenderEnum;
 import com.gym.fitcliff.model.Customer.MembershipDurationEnum;
@@ -29,7 +28,7 @@ public class CustomerDaoToDtoMapper {
 		customer.setFirstName(customerDao.getFirstName());
 		customer.setLastName(customerDao.getLastName());
 		customer.setEmail(customerDao.getEmail());
-		customer.setPhones(phoneListToStringList(customerDao.getPhones()));
+		customer.setPhone(customerDao.getPhone());
 		customer.setGender(genderDaoToGender(customerDao.getGender()));
 		customer.setIsActive(customerDao.isActive());
 		customer.setRegDate(customerDao.getRegDate());
@@ -114,12 +113,12 @@ public class CustomerDaoToDtoMapper {
 		return MembershipDurationEnum.valueOf(membershipDuration.name());
 	}
 
-	private List<String> phoneListToStringList(List<PhoneDao> phones) {
-		if (phones == null || phones.isEmpty()) {
-			return List.of();
-		}
-		return phones.stream().map(PhoneDao::getNumber).collect(Collectors.toList());
-	}
+//	private List<String> phoneListToStringList(List<PhoneDao> phones) {
+//		if (phones == null || phones.isEmpty()) {
+//			return List.of();
+//		}
+//		return phones.stream().map(PhoneDao::getNumber).collect(Collectors.toList());
+//	}
 
 	private Group groupDaoToGroup(GroupDao groupDao) {
 		if (groupDao == null) {
@@ -132,7 +131,16 @@ public class CustomerDaoToDtoMapper {
 		if (groupDao.getPayments() != null && (!groupDao.getPayments().isEmpty())) {
 			groupDao.getPayments().forEach(groupPayment -> group.addPaymentsItem(toGrpPaymentDto(groupPayment)));
 		}
+		group.setMembershipAmount(groupDao.getMembershipAmount());
+		group.setMembershipDuration(grpMembrDruToGrpMembrshipDruEnum(groupDao.getMembershipDuration()));
 		return group;
+	}
+	
+	private Group.MembershipDurationEnum grpMembrDruToGrpMembrshipDruEnum(GroupDao.MembershipDuration membershipDuration) {
+		if (membershipDuration == null) {
+			return null;
+		}
+		return Group.MembershipDurationEnum.valueOf(membershipDuration.name());
 	}
 
 	private GroupPayment toGrpPaymentDto(GroupPaymentDao groupPaymentDao) {

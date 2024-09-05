@@ -31,8 +31,8 @@ public class CustomerDao {
     @Column(nullable = true, unique = false, length = 255)
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PhoneDao> phones;
+    @Column(nullable = false, length = 50)
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -92,11 +92,6 @@ public class CustomerDao {
         INDIVIDUAL, GROUP
     }
     
-  
-    public void addPhone(final PhoneDao phone) {
-        phones.add(phone);
-        phone.setCustomer(this);
-      }
     
     public void addIndividualPayment(final IndividualPaymentDao individualPayment) {
     	payments.add(individualPayment);

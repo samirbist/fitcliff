@@ -18,11 +18,21 @@ public class GroupDtoToDaoMapper {
 		dao.setName(group.getName());
 		dao.setDate(group.getDate());
 		dao.setPayments(new ArrayList<GroupPaymentDao>());
+		dao.setMembershipAmount(group.getMembershipAmount());
+		dao.setMembershipDuration(groupEnumToMembershipDuration(group.getMembershipDuration()));
 		group.getPayments().forEach(payment -> dao.addGroupPayment(toGroupPaymentDao(payment)));
 		return dao;
 	}
 
-	private GroupPaymentDao toGroupPaymentDao( GroupPayment payment) {
+	private GroupDao.MembershipDuration groupEnumToMembershipDuration(
+			Group.MembershipDurationEnum membershipDurationEnum) {
+		if (membershipDurationEnum == null) {
+			return null;
+		}
+		return GroupDao.MembershipDuration.valueOf(membershipDurationEnum.name());
+	}
+
+	private GroupPaymentDao toGroupPaymentDao(GroupPayment payment) {
 		GroupPaymentDao dao = new GroupPaymentDao();
 		dao.setId(payment.getId());
 //		dao.setGroup(payment.getGroupId());
@@ -33,5 +43,4 @@ public class GroupDtoToDaoMapper {
 		return dao;
 	}
 
-	
 }
