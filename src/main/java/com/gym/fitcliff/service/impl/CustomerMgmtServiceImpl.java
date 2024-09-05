@@ -132,7 +132,7 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 			customerDao.setLastName(savedCustomerDao.getLastName());
 //			savedCustomerDao.getPhones().forEach(customerDao::addPhone);
 			customerDao.setPhone(savedCustomerDao.getPhone());
-			
+			customerDao.setEmail(savedCustomerDao.getEmail());
 			customerDao.setGender(savedCustomerDao.getGender());
 			customerDao.setActive(savedCustomerDao.isActive());
 			customerDao.setRegDate(savedCustomerDao.getRegDate());
