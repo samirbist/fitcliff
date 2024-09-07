@@ -45,7 +45,7 @@ public class CustomerDao {
     private LocalDate  regDate;
 
     @Column(nullable = false)
-    private LocalDate  joinDate;
+    private LocalDate  lastDate;
 
     @Column(nullable = false)
     private LocalDate  birthdate;
@@ -56,25 +56,10 @@ public class CustomerDao {
     @Column(nullable = false)
     private String membershipAmount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MembershipDuration membershipDuration;
-
+ 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IndividualPaymentDao> payments;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id")
-    private GroupDao group;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MembershipType membershipType;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "document_id", referencedColumnName = "id")
-    private DocumentImageDao documentImage;
-    
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private ImageDao image;
@@ -84,14 +69,7 @@ public class CustomerDao {
         MALE, FEMALE
     }
 
-    public enum MembershipDuration {
-        ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR
-    }
 
-    public enum MembershipType {
-        INDIVIDUAL, GROUP
-    }
-    
     
     public void addIndividualPayment(final IndividualPaymentDao individualPayment) {
     	payments.add(individualPayment);

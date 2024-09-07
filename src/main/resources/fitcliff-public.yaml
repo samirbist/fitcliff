@@ -17,97 +17,9 @@ servers:
 tags:
   - name: customer
     description: Customer Management.
-  - name: group
-    description: Group of customer
   - name: image
     description: image.
-  - name: documentId
-    description: documentId.
 paths:
-  '/admin/documentId':
-    post:
-      description: Create document entry
-      tags: [ documentId ]
-      operationId: createDocumentId
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                fileName:
-                  type: string
-                image:
-                  type: string
-                  format: binary
-      security:
-        - oidc: [ ]
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DocumentImage'
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
-  '/admin/documentId/{id}':
-    get:
-      description: Download document Id
-      tags:
-        - documentId
-      operationId: getDocumentId
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
-    delete:
-      description: Delete document Id
-      tags:
-        - image
-      operationId: deleteDocumentId
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
   '/admin/image':
     post:
       description: Create Image entry
@@ -192,122 +104,11 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/ServerError'
-  '/admin/group/{id}/customer':
-    get:
-      description: Get customer list by group id
-      tags:
-        - customer
-      operationId: getCustomerByGroup
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
-  '/admin/group':
-    get:
-      description: Get Group list
-      tags:
-        - group
-      operationId: getGroups
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Group'
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
-    post:
-      description: Create new group
-      tags: [ group ]
-      operationId: createGroup
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Group'
-        required: true
-      security:
-        - oidc: [ ]
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Group'
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
-    put:
-      description: Update group
-      tags: [ group ]
-      operationId: updateGroup
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Group'
-        required: true
-      security:
-        - oidc: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Group'
-        '400':
-          $ref: '#/components/responses/ValidationError'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        default:
-          $ref: '#/components/responses/ServerError'
   '/admin/customer/search/{text}':
     get:
       description: Search Customers
       tags: [ customer ]
-      operationId: searchCustomerBy
+      operationId: getCustomerByText
       parameters:
         - in: path
           name: text
@@ -333,16 +134,46 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/ServerError'
+  '/admin/customer/{durationId}/search':
+    get:
+      description: Search Customers
+      tags: [ customer ]
+      operationId: getCustomerByDuration
+      parameters:
+        - in: path
+          name: durationId
+          required: true
+          schema:
+            type: integer
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
   '/admin/customer/search':
     post:
       description: Search Customers
       tags: [ customer ]
-      operationId: searchCustomer
+      operationId: searchCustomerByField
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SearchCustomer'
+              $ref: '#/components/schemas/Customer'
         required: true
       security:
         - oidc: [ ]
@@ -368,7 +199,7 @@ paths:
       description: Get customer details for an id
       tags:
         - customer
-      operationId: getCustomer
+      operationId: getCustomerById
       parameters:
         - in: path
           name: id
@@ -385,6 +216,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/customer/inactive':
+    get:
+      description: Get Inactive Customer list
+      tags:
+        - customer
+      operationId: getInactiveCustomers
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/customer/inactivesoon':
+    get:
+      description: Get Customer list which will be inactive soon
+      tags:
+        - customer
+      operationId: getCustomersInactiveSoon
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
         '400':
           $ref: '#/components/responses/ValidationError'
         '401':
@@ -474,28 +355,6 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
-    DocumentImage:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        fileName:
-          type: string
-        cutomerId:
-          type: integer
-          format: int64
-        createdOn:
-          type: string
-          format: date
-        mongoId:
-          type: string
-          example: mongodb id
-      required:
-        - fileName
-        - cutomerId
-        - createdOn
-        - mongoId
     Image:
       type: object
       properties:
@@ -518,50 +377,6 @@ components:
         - cutomerId
         - createdOn
         - mongoId
-    SearchCustomer:
-      type: object
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-          minLength: 0
-          exclusiveMinimum: true
-          maxLength: 255
-        email:
-          type: string
-          format: email
-          minLength: 0
-          exclusiveMinimum: true
-          maxLength: 255
-          example: a.b@gmail.com
-        gender:
-         type: string
-         enum:
-          - MALE
-          - FEMALE
-        phone:
-          type: string
-        regDate:
-          type: string
-          format: date
-        joinDate:
-          type: string
-          format: date
-        birthdate:
-          type: string
-          format: date
-        address:
-          type: string
-        membershipAmount:
-          type: string
-        membershipDuration:
-          type: string
-          enum:
-           - ONE_MONTH
-           - THREE_MONTHS
-           - SIX_MONTHS
-           - ONE_YEAR
     Customer:
       type: object
       properties:
@@ -594,7 +409,7 @@ components:
         regDate:
           type: string
           format: date
-        joinDate:
+        lastDate:
           type: string
           format: date
         birthdate:
@@ -604,39 +419,23 @@ components:
           type: string
         membershipAmount:
           type: string
-        membershipDuration:
-          type: string
-          enum:
-           - ONE_MONTH
-           - THREE_MONTHS
-           - SIX_MONTHS
-           - ONE_YEAR
         payments:
           type: array
           items:
             $ref: '#/components/schemas/IndividualPayment'
-        group:
-          $ref: '#/components/schemas/Group'
         image:
           type: integer
           format: int64
-        documentImage:
-          type: integer
-          format: int64
-        membershipType:
-          type: string
-          enum:
-            - INDIVIDUAL
-            - GROUP
       required:
         - firstName
+        - lastName
         - gender
         - phone
-        - joinDate
-        - birthdate
+        - regDate
+        - lastDate
         - address
         - membershipAmount
-        - membershipDuration
+        - image
     IndividualPayment:
       type: object
       properties:
@@ -658,59 +457,15 @@ components:
           enum:
            - CASH
            - UPI
+        membershipDuration:
+          type: integer
       required:
         - cutomerId
+        - date
         - amount
+        - pendingAmount
         - paymentType
-    GroupPayment:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        groupId:
-          type: integer
-          format: int64
-        date:
-          type: string
-          format: date
-        amount:
-          type: string
-        pendingAmount:
-          type: string
-        paymentType:
-          type: string
-          enum:
-           - CASH
-           - UPI
-      required:
-        - groupId
-        - amount
-        - paymentType
-    Group:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        date:
-          type: string
-          format: date
-        membershipAmount:
-          type: string
-        membershipDuration:
-          type: string
-          enum:
-           - ONE_MONTH
-           - THREE_MONTHS
-           - SIX_MONTHS
-           - ONE_YEAR
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupPayment'
+        - membershipDuration
     ValidationError:
       description: A response object that reflects the validation errors occured while validating the input
       type: object

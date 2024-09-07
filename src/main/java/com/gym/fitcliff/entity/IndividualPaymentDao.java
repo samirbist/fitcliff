@@ -46,6 +46,10 @@ public class IndividualPaymentDao {
 	@Column(nullable = false)
 	private PaymentType paymentType;
 
+	@ManyToOne
+	@JoinColumn(name = "membership_duration_id", nullable = false)
+	private MemberShipDurationDao membershipDuration;
+
 	// Enum definition
 	public enum PaymentType {
 		CASH, UPI

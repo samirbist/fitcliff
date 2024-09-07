@@ -44,19 +44,12 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	private CustomerRepository customerRepository;
 
 	@Autowired
-	private DocumentImageRepository documentImageRepository;
-
-	@Autowired
 	private ImageRepository imageRepository;
-
-	@Autowired
-	private GroupRepository groupRepository;
 
 	@Autowired
 	private ImageMgmtService imageMgmtService;
 
-	@Autowired
-	private DocumentMgmtService documentMgmtService;
+
 
 	@Override
 	@Transactional
@@ -175,12 +168,12 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 	}
 
 	@Override
-	public List<Customer> searchCustomers(SearchCustomer searchCustomer) {
+	public List<Customer> searchCustomers(Customer searchCustomer) {
 		CustomerDao customerDao = customerDtoToDaoMapper.convertSearchCustomerToDao(searchCustomer);
 		List<CustomerDao> customerDaoList = customerRepository.searchCustomers(customerDao.getFirstName(),
 				customerDao.getLastName(), customerDao.getPhone(), customerDao.getEmail(), customerDao.getGender(), customerDao.getRegDate(),
-				customerDao.getJoinDate(), customerDao.getBirthdate(), customerDao.getAddress(),
-				customerDao.getMembershipAmount(), customerDao.getMembershipDuration());
+				customerDao.getLastDate(), customerDao.getBirthdate(), customerDao.getAddress(),
+				customerDao.getMembershipAmount());
 		if (customerDaoList != null && !customerDaoList.isEmpty()) {
 			final List<Customer> customerList = customerDaoList.stream()
 					.map(customerDaoRet -> customerDaoToDtoMapper.convert(customerDaoRet))
@@ -206,19 +199,5 @@ public class CustomerMgmtServiceImpl implements CustomerMgmtService {
 		}
 	}
 
-	@Override
-	public List<Customer> getCustomersByGroupId(Long id) {
-		Optional<GroupDao> groupDaoOpional = groupRepository.findById(id);
-		if (groupDaoOpional.isPresent()) {
-			GroupDao groupDao = groupDaoOpional.get();
-			List<CustomerDao> customerDaoList = groupDao.getCustomers();
-			List<Customer> customerList = new ArrayList<>();
-			if (customerDaoList != null && !customerDaoList.isEmpty()) {
-				customerDaoList.forEach(customerDao -> customerList.add(customerDaoToDtoMapper.convert(customerDao)));
-			}
-			return customerList;
-		} else {
-			throw new EntityNotFoundException("Group Not found for id " + id);
-		}
-	}
+	
 }

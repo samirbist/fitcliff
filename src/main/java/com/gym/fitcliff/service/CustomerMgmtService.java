@@ -3,7 +3,6 @@ package com.gym.fitcliff.service;
 import java.util.List;
 
 import com.gym.fitcliff.model.Customer;
-import com.gym.fitcliff.model.SearchCustomer;
 
 public interface CustomerMgmtService {
 
@@ -17,9 +16,12 @@ public interface CustomerMgmtService {
 
 	List<Customer> searchCustomersBy(String text);
 
-	List<Customer> searchCustomers(SearchCustomer searchCustomer);
+	List<Customer> searchCustomers(Customer searchCustomer);
 
-	List<Customer> getCustomersByGroupId(Long id);
+	List<Customer> getCustomerByDuration(Integer duration);
 
+	List<Customer> getCustomersInactiveSoon();
+
+	List<Customer>  getInactiveCustomers();
 
 }
