@@ -25,8 +25,7 @@ public class MemberShipDurationDao {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(nullable = false, unique=true)
+	@Column(nullable = false, unique = true)
 	private String duration;
-	
-	
+
 }

@@ -9,6 +9,7 @@ import com.gym.fitcliff.entity.CustomerDao;
 import com.gym.fitcliff.entity.CustomerDao.Gender;
 import com.gym.fitcliff.entity.ImageDao;
 import com.gym.fitcliff.entity.IndividualPaymentDao;
+import com.gym.fitcliff.entity.MemberShipDurationDao;
 import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.Customer.GenderEnum;
 import com.gym.fitcliff.model.IndividualPayment;
@@ -26,6 +27,7 @@ public class CustomerDtoToDaoMapper {
 		dao.setGender(genderToGenderDao(customer.getGender()));
 		dao.setActive(customer.getIsActive());
 		dao.setRegDate(customer.getRegDate());
+		dao.setJoinDate(customer.getJoinDate());
 		dao.setLastDate(customer.getLastDate());
 		dao.setBirthdate(customer.getBirthdate());
 		dao.setAddress(customer.getAddress());
@@ -41,14 +43,6 @@ public class CustomerDtoToDaoMapper {
 		}
 		return Gender.valueOf(genderEnum.name());
 	}
-	
-	private Gender genderSearchToGender(Customer.GenderEnum genderEnum) {
-		if (genderEnum == null) {
-			return null;
-		}
-		return Gender.valueOf(genderEnum.name());
-	}
-
 	
 
 	private ImageDao imageToImageDao(Long imageId) {
@@ -72,25 +66,11 @@ public class CustomerDtoToDaoMapper {
 			paymentDao.setAmount(payment.getAmount());
 			paymentDao.setPendingAmount(payment.getPendingAmount());
 			paymentDao.setPaymentType(IndividualPaymentDao.PaymentType.valueOf(payment.getPaymentType().name()));
+			MemberShipDurationDao memberShipDurationDao = new MemberShipDurationDao();
+			memberShipDurationDao.setId(payment.getMembershipDuration());
+			paymentDao.setMembershipDuration(memberShipDurationDao);
 			return paymentDao;
 		}).collect(Collectors.toList());
-	}
-
-
-
-	public CustomerDao convertSearchCustomerToDao(Customer customer) {
-		CustomerDao dao = new CustomerDao();
-		dao.setFirstName(customer.getFirstName());
-		dao.setLastName(customer.getLastName());
-		dao.setEmail(customer.getEmail());
-		dao.setGender(genderSearchToGender(customer.getGender()));
-		dao.setRegDate(customer.getRegDate());
-		dao.setLastDate(customer.getLastDate());
-		dao.setBirthdate(customer.getBirthdate());
-		dao.setAddress(customer.getAddress());
-		dao.setPhone(customer.getPhone());
-		dao.setMembershipAmount(customer.getMembershipAmount());
-		return dao;
 	}
 
 }

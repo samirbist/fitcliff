@@ -35,3 +35,6 @@ logging:
 #     name: /opt/logs/fitcliff-app.log
     name: C:/logs/fitcliff-app.log  # Specify the file name and path
  
+# application.yaml
+customer:
+  daysBeforeExpiry: 7

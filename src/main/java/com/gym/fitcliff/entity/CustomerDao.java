@@ -46,11 +46,14 @@ public class CustomerDao {
 
     @Column(nullable = false)
     private LocalDate  lastDate;
-
+    
     @Column(nullable = false)
+    private LocalDate joinDate;
+
+    @Column(nullable = true)
     private LocalDate  birthdate;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 1000)
     private String address;
 
     @Column(nullable = false)

@@ -19,6 +19,8 @@ tags:
     description: Customer Management.
   - name: image
     description: image.
+  - name: duration
+    description: customer membership duration.
 paths:
   '/admin/image':
     post:
@@ -145,6 +147,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       security:
         - oidc: [ ]
       responses:
@@ -266,6 +269,56 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/customer/pendingpayment':
+    get:
+      description: Get Customer list which will be inactive soon
+      tags:
+        - customer
+      operationId: getCustomersPendingPayment
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/ServerError'
+  '/admin/duration':
+    get:
+      description: Get membership duration list
+      tags:
+        - duration
+      operationId: getAllDuration
+      security:
+        - oidc: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemberShipDuration'
         '400':
           $ref: '#/components/responses/ValidationError'
         '401':
@@ -412,6 +465,9 @@ components:
         lastDate:
           type: string
           format: date
+        joinDate:
+          type: string
+          format: date
         birthdate:
           type: string
           format: date
@@ -433,6 +489,7 @@ components:
         - phone
         - regDate
         - lastDate
+        - joinDate
         - address
         - membershipAmount
         - image
@@ -459,6 +516,7 @@ components:
            - UPI
         membershipDuration:
           type: integer
+          format: int64
       required:
         - cutomerId
         - date
@@ -466,6 +524,14 @@ components:
         - pendingAmount
         - paymentType
         - membershipDuration
+    MemberShipDuration:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        duration:
+          type: string
     ValidationError:
       description: A response object that reflects the validation errors occured while validating the input
       type: object

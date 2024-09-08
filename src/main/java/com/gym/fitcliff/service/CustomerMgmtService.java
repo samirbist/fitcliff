@@ -3,6 +3,7 @@ package com.gym.fitcliff.service;
 import java.util.List;
 
 import com.gym.fitcliff.model.Customer;
+import com.gym.fitcliff.model.MemberShipDuration;
 
 public interface CustomerMgmtService {
 
@@ -18,10 +19,14 @@ public interface CustomerMgmtService {
 
 	List<Customer> searchCustomers(Customer searchCustomer);
 
-	List<Customer> getCustomerByDuration(Integer duration);
+	List<Customer> getCustomerByDuration(Long duration);
 
 	List<Customer> getCustomersInactiveSoon();
 
 	List<Customer>  getInactiveCustomers();
+
+	List<MemberShipDuration> getAllDuration();
+
+	List<Customer> getCustomersPendingPayment();
 
 }

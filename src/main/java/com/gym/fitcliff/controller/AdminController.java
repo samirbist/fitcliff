@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ import com.gym.fitcliff.api.AdminApi;
 import com.gym.fitcliff.dto.MongoDataDto;
 import com.gym.fitcliff.model.Customer;
 import com.gym.fitcliff.model.Image;
+import com.gym.fitcliff.model.MemberShipDuration;
 import com.gym.fitcliff.service.CustomerMgmtService;
 import com.gym.fitcliff.service.ImageMgmtService;
 
@@ -116,7 +118,7 @@ public class AdminController implements AdminApi {
 
 	@Override
 	@GetMapping("/customer/{durationId}/search")
-	public ResponseEntity<List<Customer>> getCustomerByDuration(@PathVariable("durationId") Integer duration) {
+	public ResponseEntity<List<Customer>> getCustomerByDuration(@PathVariable("durationId") Long duration) {
 		return new ResponseEntity<>(customerMgmtService.getCustomerByDuration(duration), HttpStatus.OK);
 	}
 
@@ -131,4 +133,16 @@ public class AdminController implements AdminApi {
 	public ResponseEntity<List<Customer>> getInactiveCustomers() {
 		return new ResponseEntity<>(customerMgmtService.getInactiveCustomers(), HttpStatus.OK);
 	}
+
+	@Override
+	@GetMapping("/duration")
+	public ResponseEntity<List<MemberShipDuration>> getAllDuration() {
+		return new ResponseEntity<>(customerMgmtService.getAllDuration(), HttpStatus.OK);
+	}
+
+	@GetMapping("/customer/pendingpayment")
+	public ResponseEntity<List<Customer>> getCustomersPendingPayment() {
+		return new ResponseEntity<>(customerMgmtService.getCustomersPendingPayment(), HttpStatus.OK);
+	}
+
 }
