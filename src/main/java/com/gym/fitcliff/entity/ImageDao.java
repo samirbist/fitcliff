@@ -12,12 +12,14 @@ import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "image")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class ImageDao {
 
 	/** Primary key */
@@ -29,8 +31,16 @@ public class ImageDao {
 
 	@OneToOne(mappedBy = "image")
 	private CustomerDao customer;
-	
-    private String fileName;
-    private LocalDate createdOn;
-    private String mongoId;
+
+	private String fileName;
+	private LocalDate createdOn;
+	private String mongoId;
+
+	@Column(nullable = false)
+	private boolean isActive;
+
+	// Constructor to ensure the default value is set
+	public ImageDao() {
+		this.isActive = true;
+	}
 }

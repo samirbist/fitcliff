@@ -30,6 +30,7 @@ CREATE TABLE public.image (
 	created_on date NULL,
 	file_name varchar(255) NULL,
 	mongo_id varchar(255) NULL,
+	is_active bool NOT NULL DEFAULT true,
 	CONSTRAINT image_pkey PRIMARY KEY (id)
 );
 

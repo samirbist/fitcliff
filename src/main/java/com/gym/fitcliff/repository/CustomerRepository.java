@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.gym.fitcliff.entity.CustomerDao;
 import com.gym.fitcliff.entity.CustomerDao.Gender;
+import com.gym.fitcliff.entity.ImageDao;
 
 public interface CustomerRepository extends JpaRepository<CustomerDao, Long> {
 
@@ -42,4 +43,11 @@ public interface CustomerRepository extends JpaRepository<CustomerDao, Long> {
 	
 	// Find all customers where lastDate is before today and they are still active
     List<CustomerDao> findByLastDateBeforeAndIsActiveTrue(LocalDate date);
+    
+ // Find all customers where lastDate is after or equal to today and they are not active
+    List<CustomerDao> findByLastDateGreaterThanEqualAndIsActiveFalse(LocalDate date);
+    
+    @Query("SELECT c.image FROM CustomerDao c WHERE c.lastDate <= :oneYearAgo AND c.image.isActive = true")
+    List<ImageDao> findImagesByLastDateOlderThanOneYearAndActiveImage(@Param("oneYearAgo") LocalDate oneYearAgo);
+
 }
