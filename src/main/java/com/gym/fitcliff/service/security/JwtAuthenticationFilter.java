@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.gym.fitcliff.repository.BlacklistedTokenRepository;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -29,6 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    
+    @Autowired
+    private BlacklistedTokenRepository blacklistedTokenRepository;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -51,6 +57,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
 
                 username = this.jwtHelper.getUsernameFromToken(token);
+                // Check if the token is blacklisted
+                if (blacklistedTokenRepository.existsByToken(token)) {
+                    logger.info("Token is blacklisted. Access denied.");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token is blacklisted. Access denied.");
+                    return;  // Stop the filter chain
+                }
 
             } catch (IllegalArgumentException e) {
                 logger.info("Illegal Argument while fetching the username !!");

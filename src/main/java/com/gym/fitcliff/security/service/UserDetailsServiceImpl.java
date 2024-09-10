@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gym.fitcliff.entity.UserDao;
@@ -21,8 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,6 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_" + user.getRole().getName());
 		List<SimpleGrantedAuthority> roleList = new ArrayList<>();
 		roleList.add(grantedAuthority);
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), passwordEncoder.encode(user.getPassword()), roleList);
+		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), roleList);
 	}
 }
